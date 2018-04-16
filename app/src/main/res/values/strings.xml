@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">朝法审执助手</string>
+    <string name="new_task">新任务</string>
+    <string name="statistics">统计分析</string>
+    <string name="instant_messaging">即时通讯</string>
+    <string name="judge_text">法官笔录</string>
+</resources>
