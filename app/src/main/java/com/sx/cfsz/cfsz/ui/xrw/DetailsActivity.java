@@ -77,7 +77,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
             //如果“增加按钮形状的”图片的位置是最后一张，且添加了的图片的数量不超过8张，才能点击
             if (mPicList.size() == AppConfig.MAX_SELECT_PIC_NUM) {
                 //最多添加8张图片
-//                viewPluImg(position);
+                viewPluImg(position);
             } else {
                 //添加凭证图片
 //                selectPic(AppConfig.MAX_SELECT_PIC_NUM - mPicList.size());
