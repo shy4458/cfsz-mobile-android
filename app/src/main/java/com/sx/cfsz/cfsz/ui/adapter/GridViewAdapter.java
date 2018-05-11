@@ -6,7 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+
 import com.sx.cfsz.R;
 import com.sx.cfsz.baseframework.base.AppConfig;
 
@@ -54,7 +55,7 @@ public class GridViewAdapter extends android.widget.BaseAdapter {
         if (position < mList.size()) {
             //代表+号之前的需要正常显示图片
             String picUrl = mList.get(position); //图片路径
-            Picasso.with(mContext).load(picUrl).into(iv);
+            Glide.with(mContext).load(picUrl).into(iv);
         } else {
             iv.setImageResource(R.drawable.ic_add);//最后一个显示加号图片
         }

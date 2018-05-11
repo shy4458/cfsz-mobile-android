@@ -10,6 +10,8 @@ import android.widget.Button;
 
 import com.sx.cfsz.R;
 import com.sx.cfsz.baseframework.base.BaseApplication;
+import com.sx.cfsz.baseframework.http.HttpUtils;
+import com.sx.cfsz.cfsz.presenter.LoginPresenter;
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
@@ -21,7 +23,8 @@ import javax.inject.Inject;
 
 public class LoginActivity extends AppCompatActivity {
 
-
+    @Inject
+    LoginPresenter presenter;
     private Button bLogin;
 
     @Override
@@ -29,9 +32,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         BaseApplication.addList(this);
-        initXg();
-
         initView();
+        initXg();
     }
 
     private void initXg() {
@@ -63,5 +65,10 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    @Override
+    protected void onDestroy() {
+        HttpUtils.cancleAllCall(this);
+        super.onDestroy();
     }
 }

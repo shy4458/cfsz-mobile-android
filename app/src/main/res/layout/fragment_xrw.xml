@@ -12,7 +12,7 @@
         android:padding="10dp">
 
         <LinearLayout
-            android:id="@+id/llZxz"
+            android:id="@+id/llDzx"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginRight="5dp"
@@ -21,23 +21,25 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_dzxtitle"
                 android:layout_margin="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="执行中"/>
+                android:text="待执行"/>
 
             <TextView
+                android:id="@+id/tv_dzx"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="123件"/>
+                android:text="0件"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/llDzx"
+            android:id="@+id/llZxz"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
@@ -47,18 +49,20 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_zxztitle"
                 android:layout_margin="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="待执行"/>
+                android:text="执行中"/>
 
             <TextView
+                android:id="@+id/tv_zxz"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="6件"/>
+                android:text="0件"/>
 
         </LinearLayout>
 
@@ -72,6 +76,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_ywctitle"
                 android:layout_margin="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -79,11 +84,12 @@
                 android:text="已完成"/>
 
             <TextView
+                android:id="@+id/tv_ywc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="56件"/>
+                android:text="0件"/>
 
         </LinearLayout>
     </LinearLayout>
@@ -93,19 +99,10 @@
         android:layout_height="2dp"
         android:background="#e5e5e2"/>
 
-    <com.sx.cfsz.cfsz.ui.myView.MySwipeRefreshLayout
-        android:id="@+id/mysrlRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ListView
-            android:id="@+id/lv"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </ListView>
-
-    </com.sx.cfsz.cfsz.ui.myView.MySwipeRefreshLayout>
-
-
+        </android.support.v4.view.ViewPager>
 </LinearLayout>

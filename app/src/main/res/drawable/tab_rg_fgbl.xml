@@ -2,5 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_checked="true" android:drawable="@drawable/ic_fgbl"></item>
-    <item android:drawable="@drawable/ic_fgbl_n"></item>
+    <item android:drawable="@drawable/ic_fgbl_n">
+
+    </item>
 </selector>

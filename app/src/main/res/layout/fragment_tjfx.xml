@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <ScrollView
+        <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -38,22 +37,54 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="全部案件" />
+                        android:text="案件数量" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="应该完成" />
+                        android:text="任务数量" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="实际完成" />
+                        android:text="删除任务数量" />
 
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_tj_qb"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlack" />
+
+                    <TextView
+                        android:id="@+id/tv_tj_ygwc"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlack" />
+
+                    <TextView
+                        android:id="@+id/tv_tj_sjwc"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlack" />
 
                 </LinearLayout>
 
@@ -68,24 +99,21 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="1826"
-                        android:textColor="@color/colorBlack" />
+                        android:text="延时任务数量" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="1802"
-                        android:textColor="@color/colorBlack" />
+                        android:text="转派数量" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="1322"
-                        android:textColor="@color/colorBlack" />
+                        android:text="新增数量" />
 
                 </LinearLayout>
 
@@ -96,60 +124,30 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/tv_tj_cs"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="超时" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="转派" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="新增" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="1325"
                         android:textColor="@color/colorBlack" />
 
                     <TextView
+                        android:id="@+id/tv_tj_zp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="899"
                         android:textColor="@color/colorBlack" />
 
                     <TextView
+                        android:id="@+id/tv_tj_xz"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="56"
                         android:textColor="@color/colorBlack" />
 
                 </LinearLayout>
-
 
             </LinearLayout>
 
@@ -168,6 +166,12 @@
                 android:background="#ffffff"
                 android:orientation="vertical">
 
+                <com.github.mikephil.charting.charts.CombinedChart
+                    android:id="@+id/cc"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </com.github.mikephil.charting.charts.CombinedChart>
 
             </LinearLayout>
 
@@ -185,6 +189,13 @@
                 android:background="#ffffff"
                 android:orientation="horizontal">
 
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/bc"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </com.github.mikephil.charting.charts.BarChart>
+
             </LinearLayout>
 
             <TextView
@@ -198,6 +209,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:background="#ffffff">
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/piechart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </com.github.mikephil.charting.charts.PieChart>
 
             </LinearLayout>
 

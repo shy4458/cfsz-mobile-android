@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bm.library.PhotoView;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import com.sx.cfsz.R;
 
 import java.util.List;
@@ -45,7 +45,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         View itemView = getItemView(R.layout.view_pager_img);
         PhotoView imageView = (PhotoView) itemView.findViewById(R.id.img_iv);
 
-        Picasso.with(context).load(imgList.get(position)).into(imageView);
+        Glide.with(context).load(imgList.get(position)).into(imageView);
         container.addView(itemView);
         return itemView;
     }

@@ -12,98 +12,95 @@ public class AppConfig {
     public static final int REQUEST_CODE_MAIN = 10; //请求码
     public static final int RESULT_CODE_VIEW_IMG = 11; //查看大图页面的结果码
 
+    public static final int STETADZX = 1;
+    public static final int STETAZXZ = 2;
+    public static final int STETAYWC = 3;
+
+    public static final int ROWSNUMBER = 10;
+
     //ip
-//    public static final String IP = "http://192.168.120.161:8080/";
-    public static final String IP = "http://192.168.120.148:8080/";
-    //登录
-    public static final String Login = "loginMobile?";
+    public static final String IP = "http://192.168.120.115:9000/";
 
-    //修改签到状态    qwxt/v1/xgqdzt?rybh=&qdzt=
-    public static final String MODIFY_STATE = "qwxt/v1/xgqdzt?";
-    //人员编号
-    public static final String PERSONNEL_NUMBER = "rybh=";
-    //签到状态
-    public static final String SIGNIN_STATE = "&qdzt=";
-    //小组
-    public static final String GROUP = "&xz=";
-    //日期
-    public static final String DATE = "rq=";
-
-    //查询小组数量
-    public static final String GROUP_NUMBER = "qwxt/v1/cxxzsl";
-    //查询每个理由下的人数  +  rq = 当前时间
-    public static final String REASON_NUMBER = "qwxt/v1/qdztfb?" + DATE + getDate();
-    //查询考勤表  + rq    xz小组  为空是全部        : /qwxt/v1/cxkqb?rq=20171113&xz=
-    public static final String SIGNIN_SURFACE = "qwxt/v1/cxkqb?" + DATE + getDate() + GROUP;
-    //请假原因
-    public static final String VACATION_REASON = "qwxt/v1/qjyy";
-
-    //删除勤务安排   delete类型的请求
-    public static final String DELETE_WORK_MANAGER = "qwxt/v1/deleteqwap?" + PERSONNEL_NUMBER;
-    //查询今日在岗的人      qwxt/v1/cxzgry?rq=&xz=
-    public static final String IN_POST = "qwxt/v1/cxzgry?" + DATE + getDate() + "&xz=";
-    //查询任务代号
-    public static final String TASK_NUMBER = "qwxt/v1/cxrwdh";
-    //查询勤务安排
-    public static final String WORK_MANAGER = "qwxt/v1/cxqwap?" + DATE + getDate();
-    //给一个人 或 多个人安排任务    qwxt/v1/insertqwap?rybh=&rwdh=&rwqssj=&rwjzsj=
-    public static final String ARRANGE_TASKS = "qwxt/v1/insertqwap?" + PERSONNEL_NUMBER;
-    //任务代号
-    public static final String NUMBER = "&rwdh=";
-    //任务开始时间
-    public static final String START_TASKS_DATE = "rwqssj=";
-    public static final String SEND_TASKS_DATE = "rwjzsj=";
-    //头像
-    public static final String IM = "qwxt/v1/readImage?zpxx=";
-    //pppWindows 列表数据
-    public static final String POPUP_DATA = "qwxt/v1/qjyy?grade=1";
-    //dialog数据
-    public static final String DIALOG_DATA = "qwxt/v1/qjyy?grade=2";
-    //查询本月记录
-    public static final String MONTH = "qwxt/v1//cxdmkq?qssj=" + getDateMonth() + "&jzsj=" + getDate();
-    //获取待添加任务的人员列表
-    public static final String ADD_TO = "qwxt/v1/cxwaprwry?rq=" + getDate() + "&xz=";
-    //起始时间
-    public static final String QSSJ = "&rwqssj=";
+    //每个状态下的总数  http://192.168.120.115:9000/task/Appidsjl
+    public static final String NUMBER = "task/Appidsjl?user_id=2";
+    //待执行
+    //http://192.168.120.115:9000/task/Appdzx?page=1&rows=10
+    public static final String DZX = "task/Appdzx?user_id=2&";
+    //执行中
+    public static final String ZXZ = "task/Appzxz?user_id=2&";
+    //已完成
+    public static final String YWC = "task/Appywc?user_id=2&";
+    //当前页
+    public static final String PAGE = "page=";
+    //每页数据量
+    public static final String ROWS = "&rows=";
+    //待执行添加到执行 http://192.168.120.115:9000/task/AppdzxDAOzxz?task_id-任务的id
+    public static final String TIANJIA = "task/AppdzxDAOzxz?task_ids=";
+    //搜索
+    //http://192.168.120.115:9000/task/Appsrw?参数（必传user_id;非必传case_id（案件号）；非必传ks_time(开始时间）；非必传js_time(结束时间)）。
+    public static final String SJSEARCH = "task/Appsrw?user_id=2";
+    //开始时间
+    public static final String KS_TIME = "&ks_time=";
     //结束时间
-    public static final String JZSJ = "&rwjzsj=";
-    //记录安排
-    public static final String JLAP = "qwxt/v1/cxdmkqformobile?qssj=" + getDateMonth() + "&jzsj=" + getCurrentMonthLastDay();
+    public static final String JS_TIME = "&js_time=";
+    //案件号
+    public static final String CASE_ID = "task/Appsrw?user_id=2&case_id=";
+    //多选提交  http://192.168.120.115:9000/task/AppdzxDAOzxz?task_ids=
+    public static final String ALLSUBMIT = "task/AppdzxDAOzxz?task_ids=";
+    //去红点 单选  http://192.168.120.115:9000/task/Appidred?task_id=（去红点，单条操作）
+    public static final String REMORED = "task/Appidred?task_id=";
+    public static final String REDS = "&red_signs=";
+    public static final String RED = "&red_sign=";
+    //上传照片
+    public static final String IMG = "task/scfkzp";
+    //上传视频
+    public static final String VIDEO = "task/scfksp";
+    //反馈
+    public static final String FEED = "task/AppzxzDAOywc?";
+    //ID
+    public static final String ID = "user_id=";
+    //任务ID
+    public static final String RWID = "&task_id=";
+    //反馈内容
+    public static final String FEEDCONTENT = "&feedback_msg=";
+    //照片
+    public static final String ZPURL = "&feedback_pic=";
+    //视频
+    public static final String SPURL = "&feedback_video=";
+    //封印开始时间
+    public static final String FYQSSJ = "&sealup_time_start=";
+    //封印结束时间
+    public static final String FYJSSJ = "&sealup_time_end=";
+    //执行结果
+    public static final String RESULT = "&result_type=";
+    //照片 http://192.168.120.115:9000/task/fkzp?imgName=993324095430983680.jpg
+    public static final String DQZP = "task/fkzp?imgName=";
+    //视频  http://192.168.120.115:9000/task/fksp?videoName=992343926926999553.mp4
+    public static final String DQSP = "task/fksp?videoName=";
 
-    //车辆管理
-    //借车列表的人员数据 检验过
-    public static final String LENDCAR_PERSONNEL = "qwxt/v1/queryPeopleOfNotBorrowCar?" + DATE + getDate() + "&xz=";
-    //车辆借还信息
-    public static final String CLJHXX = "qwxt/v1/queryCarLoanReturn";
-    //插入一条使用记录      qwxt/v1/insertRecord?ryid=&carid=&loanstartime=&loanstoptime=
-    public static final String CRSYJL = "qwxt/v1/insertRecord?";
-    //人员id
-    public static final String RYID = "ryid=";
-    //车辆id
-    public static final String CARID = "&carid=";
-    //借车开始时间
-    public static final String LOANSTARTIME = "&loanstartime=";
-    //借车结束时间
-    public static final String LOANSTOPTIME = "&loanstoptime=";
-    //里程数
-    public static final String LENDDOMETER = "&loanodometer=";
-
-    //车辆归还  qwxt/v1/updateRecordReturn?recordid=&carid=
-    public static final String CLGH = "qwxt/v1/updateRecordReturn?";
-    //归还里程数
-    public static final String RETURNODOMETER = "&returnodometer=";
-    //recordid=
-    public static final String RECORDID = "&recordid=";
-    public static final String RECORDID1 = "recordid=";
+    //统计查询中的案件概括详情
+    public static final String TJSJ = "task/ajqk";
+    //每个月统计
+    public static final String TJYUE = "task/gytj";
+    //人员办案统计
+    public static final String RYBATJ = "task/rybasltj";
+    //案件类型
+    public static final String AJLXTJ = "task/ajlxtj";
 
 
-    //修改借车信息    qwxt/v1/updateRecord?ryid=&recordid=&loanstartime=&loanstoptime=
-    public static final String MODIFY = "qwxt/v1/updateRecord?";
 
-    //查询某辆车的信息
-    public static final String CARMSG = "qwxt/v1/queryOneCarInfo?carid=";
-    //查询某辆车的使用记录
-    public static final String CARRECORD = "qwxt/v1/queryRecordOfCar?carid=";
+
+
+
+
+
+
+
+
+
+
+
+
 
     public static String getDate() {
         Calendar c = Calendar.getInstance();//
@@ -153,7 +150,7 @@ public class AppConfig {
         int mMonth = a.get(Calendar.MONTH) + 1;// 获取当前月份
 
         String sMonth = "" + mMonth;
-        if (sMonth.length() == 1){
+        if (sMonth.length() == 1) {
             sMonth = "0" + sMonth;
         }
 

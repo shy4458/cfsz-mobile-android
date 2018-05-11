@@ -24,7 +24,7 @@ public class CustomBarChart extends View {
     private List<int[]> dataList;
     private List<Integer> colorList;
     // 默认边距
-    private int margin = 20;
+    private int margin = 50;
     // 距离左边偏移量
     private int marginX = 30;
     // 原点坐标
@@ -111,13 +111,13 @@ public class CustomBarChart extends View {
     private void drawAxesLine(Canvas canvas, Paint paint) {
         // X
         canvas.drawLine(xPoint, yPoint, this.getWidth() - margin / 6, yPoint, paint);
-        canvas.drawLine(this.getWidth() - margin / 6, yPoint, this.getWidth() - margin / 2, yPoint - margin / 3, paint);
-        canvas.drawLine(this.getWidth() - margin / 6, yPoint, this.getWidth() - margin / 2, yPoint + margin / 3, paint);
+//        canvas.drawLine(this.getWidth() - margin / 6, yPoint, this.getWidth() - margin / 2, yPoint - margin / 3, paint);
+//        canvas.drawLine(this.getWidth() - margin / 6, yPoint, this.getWidth() - margin / 2, yPoint + margin / 3, paint);
 
         // Y
         canvas.drawLine(xPoint, yPoint, xPoint, margin / 6, paint);
-        canvas.drawLine(xPoint, margin / 6, xPoint - margin / 3, margin / 2, paint);
-        canvas.drawLine(xPoint, margin / 6, xPoint + margin / 3, margin / 2, paint);
+//        canvas.drawLine(xPoint, margin / 6, xPoint - margin / 3, margin / 2, paint);
+//        canvas.drawLine(xPoint, margin / 6, xPoint + margin / 3, margin / 2, paint);
     }
 
     //绘制刻度

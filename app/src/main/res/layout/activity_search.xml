@@ -30,51 +30,118 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_sjss"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/colorWhite"
+        android:layout_height="100dp"
+        android:background="@color/colorBj"
         android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="起始时间" />
-
-        <TextView
-            android:id="@+id/tvSearchQssj"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="1900/01/01" />
-
         <LinearLayout
-            android:id="@+id/llSearchQssj"
+
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5">
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/ivSearchQssj"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/search_right_back" />
+            <LinearLayout
 
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="起始时间" />
+
+                <TextView
+                    android:id="@+id/tvSearchQssj"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="1900/01/01" />
+
+                <LinearLayout
+                    android:id="@+id/llSearchQssj"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5">
+
+                    <ImageView
+                        android:id="@+id/ivSearchQssj"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/search_right_back" />
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.2dp"
+                android:background="#afafaf"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="截至时间" />
+
+                <TextView
+                    android:id="@+id/tvSearchJzsj"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="1900/01/01" />
+
+                <LinearLayout
+                    android:id="@+id/llSearchJzsj"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5">
+
+                    <ImageView
+                        android:id="@+id/ivSearchJzsj"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/search_right_back" />
+
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
+
+        <Button
+            android:id="@+id/bSjss"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:background="@drawable/shape_corner_rwxq_y"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="搜索" />
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0.2dp"
-        android:background="#afafaf"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"/>
-
     <LinearLayout
+        android:id="@+id/ll_anjianhao"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/colorWhite"
@@ -85,101 +152,45 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="截至时间" />
-
-        <TextView
-            android:id="@+id/tvSearchJzsj"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="1900/01/01" />
-
-        <LinearLayout
-            android:id="@+id/llSearchJzsj"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5">
-
-            <ImageView
-                android:id="@+id/ivSearchJzsj"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/search_right_back" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0.2dp"
-        android:background="#afafaf"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:background="@color/colorWhite"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.1"
-            android:gravity="center"
-            android:text="案件号或执行人姓名" />
+            android:text="案件号" />
 
         <EditText
             android:id="@+id/etSearchName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:hint="小明" />
+            android:hint="(2018)京0000" />
+        <Button
+            android:id="@+id/bAjhSs"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_corner_rwxq_y"
+            android:text="搜索" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:orientation="horizontal"
-        >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/bCz"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_corner_rwxq"
-            android:text="重置" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/bSs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_corner_rwxq_y"
-            android:text="搜索" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+        android:orientation="horizontal">
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:background="#afafaf"
+        />
+
+    <ListView
+        android:id="@+id/lv_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBj">
+
+    </ListView>
 
 
 </LinearLayout>

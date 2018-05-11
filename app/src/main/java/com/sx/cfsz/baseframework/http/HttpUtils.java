@@ -55,10 +55,10 @@ public class HttpUtils {
 
     public static void getAsync(@NonNull String url, @NonNull Context context,
                                 final OnRequestResult result) {
-        HttpUrl httpUrl = HttpUrl.parse(url);
-        String sortResult = sortParams(httpUrl, null);
-        String sign = sign(httpUrl, sortResult);
-        Request request = newRequest(url, context, "GET", null, sign, true);
+//        HttpUrl httpUrl = HttpUrl.parse(url);
+//        String sortResult = sortParams(httpUrl, null);
+//        String sign = sign(httpUrl, sortResult);
+        Request request = newRequest(url, context, "GET", null, false);
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -79,19 +79,9 @@ public class HttpUtils {
         });
     }
 
-    public static void postFilesAsync(@NonNull String url, @NonNull Context context,
-                                     Map<String, String> params, FileInfo[] files,
+    public static void postFilesAsync(@NonNull String url, @NonNull Context context, FileInfo[] files,
                                      final OnRequestResult result) {
-        HttpUrl httpUrl = HttpUrl.parse(url);
-        String sortResult = sortParams(httpUrl, params);
-        String sign = sign(httpUrl, sortResult);
         MultipartBody.Builder mbBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        if(params != null && params.size() > 0) {
-            Set<Map.Entry<String, String>> entries = params.entrySet();
-            for(Map.Entry<String, String> entry : entries) {
-                mbBuilder.addFormDataPart(entry.getKey(), entry.getValue());
-            }
-        }
         if(files != null && files.length > 0) {
             FileInfo fileInfo;
             for(int i = 0, len = files.length; i < len; i++) {
@@ -104,7 +94,7 @@ public class HttpUtils {
             }
         }
         client
-            .newCall(newRequest(url, context, "POST", mbBuilder.build(), sign, true))
+            .newCall(newRequest(url, context, "POST", mbBuilder.build(), false))
             .enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -142,7 +132,7 @@ public class HttpUtils {
             }
         }
         client
-            .newCall(newRequest(url, context, "POST", bodyBuilder.build(), sign, true))
+            .newCall(newRequest(url, context, "POST", bodyBuilder.build(), false))
             .enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -180,7 +170,7 @@ public class HttpUtils {
             }
         }
         client
-                .newCall(newRequest(url, context, "DELETE", bodyBuilder.build(), sign, true))
+                .newCall(newRequest(url, context, "DELETE", bodyBuilder.build(), false))
                 .enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -231,19 +221,18 @@ public class HttpUtils {
      * @param context <code>Activity</code> or <code>Service</code>.
      * @param method  Http request method.
      * @param body    Http
-     * @param urlSign
      * @param hasAuth
      * @return
      */
     public static Request newRequest(@NonNull String url, @NonNull Context context,
-            String method, RequestBody body, String urlSign, boolean hasAuth) {
+            String method, RequestBody body, boolean hasAuth) {
         Request.Builder builder = new Request.Builder()
                 .url(url)
                 .method(method, body)
                 .tag(context)
-                .header("User-Agent", userAgent)
-                .header(HEADER_APP_KEY, ApiAuthUtils.getAppKey())
-                .header(HEADER_URL_SIGN, urlSign);
+                .header("User-Agent", userAgent);
+                //.header(HEADER_APP_KEY, ApiAuthUtils.getAppKey())
+                //.header(HEADER_URL_SIGN, urlSign);
         if(hasAuth) {
             builder.header(HEADER_ACCESS_TOKEN, ApiAuthUtils.getAccessToken())
                    .header(HEADER_REFRESH_TOKEN, ApiAuthUtils.getRefreshToken());
