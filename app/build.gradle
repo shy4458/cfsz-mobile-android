@@ -54,7 +54,7 @@ dependencies {
     compile 'com.google.dagger:dagger:2.6'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.6'
     //信鸽jar 3个
-    compile 'com.tencent.xinge:xinge:3.2.2-release'
+    compile 'com.tencent.xinge:xinge:3.2.3-release'
     //wup包
     compile 'com.tencent.wup:wup:1.0.0.E-release'
     //mid包

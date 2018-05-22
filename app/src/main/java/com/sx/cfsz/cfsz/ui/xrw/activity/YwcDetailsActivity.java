@@ -20,6 +20,7 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.sx.cfsz.R;
 import com.sx.cfsz.baseframework.base.AppConfig;
+import com.sx.cfsz.baseframework.base.BaseApplication;
 import com.sx.cfsz.baseframework.http.HttpUtils;
 import com.sx.cfsz.cfsz.dagger.component.DaggerYwcDetaileComponent;
 import com.sx.cfsz.cfsz.dagger.module.YwcDetailsModule;
@@ -40,7 +41,7 @@ import cn.jzvd.JZVideoPlayer;
 /***       Author  shy              反馈
  *         Time   2018/4/12 0012    14:41      */
 
-public class YwcDetailsActivity extends AppCompatActivity {
+public class YwcDetailsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     @Inject
     YwcDetailsPresenter presenter;
@@ -63,8 +64,8 @@ public class YwcDetailsActivity extends AppCompatActivity {
     private String feedback_pic;
     private String feedback_video;
 
-    private List<String> zpList = new ArrayList<>();
-    private List<String> spList = new ArrayList<>();
+    private ArrayList<String> zpList = new ArrayList<>();
+    private ArrayList<String> spList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,28 +90,30 @@ public class YwcDetailsActivity extends AppCompatActivity {
         feedback_pic = intent.getStringExtra("Feedback_pic");
         feedback_video = intent.getStringExtra("Feedback_video");
         String sealup_time_start = intent.getStringExtra("Sealup_time_start");
-        String stringExtra = intent.getStringExtra(" Sealup_time_end");
+        String sealup_time_end = intent.getStringExtra("Sealup_time_end");
+        String task_type = intent.getStringExtra("Task_type");
 
         tvAjh.setText(task_num);
         tvAddres.setText(task_address);
         tvQssj.setText(plan_time_start);
         tvJzsj.setText(plan_time_end);
         tvRwnr.setText(task_content);
+        tvMsxx.setText(feedback_msg);
+
+        tvCzlx.setText(task_type);
+        tvDcQssj.setText(splitSj(sealup_time_start));
+        tvDcJzsj.setText(splitSj(sealup_time_end));
         if (oldName == null) {
             tvZpr.setText("未转派");
         } else {
-            tvZpr.setText("转派人 ： " + oldName);
+            tvZpr.setText(oldName);
         }
-        if ("0".equals(task_sfbq)) {
-            llBqsj.setVisibility(View.INVISIBLE);
-        } else {
-            llBqsj.setVisibility(View.VISIBLE);
-        }
+
         intData();
     }
 
-
     private void initView() {
+        BaseApplication.addList(this);
         ivBack = findViewById(R.id.iv_ywc_back);
         tvAjh = findViewById(R.id.tv_ywc_ajh);
         tvAddres = findViewById(R.id.tv_ywc_address);
@@ -130,15 +133,18 @@ public class YwcDetailsActivity extends AppCompatActivity {
     }
 
     private void intData() {
-        String[] zp = feedback_pic.split(",");
-        String[] sp = feedback_video.split(",");
-        for (int i = 0; i < zp.length; i++) {
-            zpList.add(zp[i]);
+        if (!"".equals(feedback_pic)) {
+            String[] zp = feedback_pic.split(",");
+            for (int i = 0; i < zp.length; i++) {
+                zpList.add(AppConfig.IP + AppConfig.DQZP + zp[i]);
+            }
         }
-        for (int i = 0; i < sp.length; i++) {
-            spList.add(sp[i]);
+        if (!"".equals(feedback_video)) {
+            String[] sp = feedback_video.split(",");
+            for (int i = 0; i < sp.length; i++) {
+                spList.add(sp[i]);
+            }
         }
-
         intLister();
     }
 
@@ -148,6 +154,8 @@ public class YwcDetailsActivity extends AppCompatActivity {
 
         YwcSPLVAdapter ywcSPLVAdapter = new YwcSPLVAdapter(YwcDetailsActivity.this, spList);
         listView.setAdapter(ywcSPLVAdapter);
+
+        gridView.setOnItemClickListener(this);
     }
 
     @Override
@@ -155,5 +163,20 @@ public class YwcDetailsActivity extends AppCompatActivity {
         HttpUtils.cancleAllCall(this);
         super.onDestroy();
     }
+    public String splitSj(String sj){
+        if (sj != null){
+            String substring = sj.substring(0, 10);
+            return substring;
+        }
+        return "";
+    }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(YwcDetailsActivity.this, PlusImageActivity.class);
+        intent.putExtra("shanchu","000");
+        intent.putStringArrayListExtra(AppConfig.IMG_LIST, zpList);
+        intent.putExtra(AppConfig.POSITION, position);
+        startActivityForResult(intent, AppConfig.REQUEST_CODE_MAIN);
+    }
 }

@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sx.cfsz.R;
+import com.sx.cfsz.baseframework.base.BaseApplication;
 import com.sx.cfsz.cfsz.ui.myView.BothWayProgressBar;
 
 import java.io.File;
@@ -81,6 +82,7 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
     }
 
     private void initView() {
+        BaseApplication.addList(this);
         videoWidth = 640;
         videoHeight = 480;
         mSurfaceView = (SurfaceView) findViewById(R.id.surface_view);
@@ -195,12 +197,12 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
                 mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
                 mMediaRecorder.setVideoSize(videoWidth, videoHeight);
                 //每秒的帧数
-                mMediaRecorder.setVideoFrameRate(24);
+                mMediaRecorder.setVideoFrameRate(5);
                 //编码格式
-                mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
-                mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+                mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
                 // 设置帧频率，然后就清晰了，文件大小也会变化
-                mMediaRecorder.setVideoEncodingBitRate(5 * 1024 * 1024);
+                mMediaRecorder.setVideoEncodingBitRate(1024 * 1024);
                 File targetDir = Environment.
                         getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
                 l = SystemClock.currentThreadTimeMillis();

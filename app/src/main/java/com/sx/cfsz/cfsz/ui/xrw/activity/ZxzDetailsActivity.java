@@ -45,6 +45,7 @@ import com.sx.cfsz.cfsz.presenter.ZxzDetailsPresenter;
 import com.sx.cfsz.cfsz.ui.MainActivity;
 import com.sx.cfsz.cfsz.ui.adapter.GridViewAdapter;
 import com.sx.cfsz.cfsz.ui.adapter.LvMp4Adapter;
+import com.sx.cfsz.cfsz.ui.myView.CustomDialog;
 import com.sx.cfsz.cfsz.ui.xrw.PictureSelectorConfig;
 
 import java.io.File;
@@ -105,13 +106,11 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
     private ImageView ivDcQssj;
     private ImageView ivDcJzsj;
     private String Task_sfbq;
-    private LinearLayout llDcJzsj;
-    private LinearLayout llDcQssj;
+
 
     private static final int ZP = 500;
     private static final int SP = 501;
     private static final int CG = 502;
-    private ProgressDialog progressDialog;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -128,17 +127,19 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
                     ZpFeedModel spmodel = (ZpFeedModel) msg.obj;
                     BaseApplication.set("sp", spmodel.getData());
                     presenter.feed(
-                            "2",
+                            AppConfig.userId,
                             task_id,
                             etMsxx.getText(),
                             BaseApplication.get("zp", ""),
                             BaseApplication.get("sp", ""),
-                            strSelecte
+                            strSelecte,
+                            snQssj(tvDcQssj.getText()+""),
+                            snJzsj(tvDcJzsj.getText()+"")
                     );
-                    progressDialog.dismiss();
                     break;
 
                 case CG:
+                    customDialog.dismiss();
                     Intent intent = new Intent();
                     intent.putExtra("state","30");
                     ZxzDetailsActivity.this.setResult(RESULT_OK,intent);
@@ -151,9 +152,10 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
             }
         }
     };
+
     private String task_id;
     private String strSelecte;
-
+    private CustomDialog customDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -161,7 +163,6 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_zxz_details);
         DaggerZxzDetailsComponent.builder().zxzDetailsModule(new ZxzDetailsModule(this)).build().in(this);
         initView();
-
         Intent intent = getIntent();
         String task_num = intent.getStringExtra("Task_num");
         String task_address = intent.getStringExtra("Task_address");
@@ -177,15 +178,9 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         if (oldName == null) {
             tvZpr.setText("未转派");
         } else {
-            tvZpr.setText("转派人 ： " + oldName);
+            tvZpr.setText(oldName);
         }
-        if ("0".equals(Task_sfbq)) {
-            llDcQssj.setVisibility(View.INVISIBLE);
-            llDcJzsj.setVisibility(View.INVISIBLE);
-        } else {
-            llDcQssj.setVisibility(View.VISIBLE);
-            llDcJzsj.setVisibility(View.VISIBLE);
-        }
+
         tvAjh.setText(task_num);
         tvAddres.setText(task_address);
         tvQssj.setText(plan_time_start);
@@ -198,6 +193,7 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
 
 
     private void initView() {
+        BaseApplication.addList(this);
         ivBack = findViewById(R.id.ivFeedbackBack);
         tvBack = findViewById(R.id.tvFeedback);
         etMsxx = findViewById(R.id.etMsxx);
@@ -218,8 +214,6 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         tvDcJzsj = findViewById(R.id.tv_dcJzsj);
         ivDcQssj = findViewById(R.id.iv_dcQssj);
         ivDcJzsj = findViewById(R.id.iv_dcJzsj);
-        llDcQssj = findViewById(R.id.ll_dcQssj);
-        llDcJzsj = findViewById(R.id.ll_dcJzsj);
 
         ivBack.setOnClickListener(this);
         tvBack.setOnClickListener(this);
@@ -272,8 +266,8 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
                 finish();
                 break;
             case R.id.tvFeedback:
-                progressDialog = ProgressDialog.show(ZxzDetailsActivity.this, "请稍等...", "正在刷新数据中... 请稍后...", true);
-                progressDialog.setProgressStyle(R.drawable.progress_small);
+                customDialog = new CustomDialog(ZxzDetailsActivity.this, R.style.CustomDialog, false);
+                customDialog.show();
                 presenter.feedZp(mPicList);
                 break;
 
@@ -400,7 +394,6 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         Log.d("添加后////", "" + size);
     }
 
-
     //查看大图
     private void viewPluImg(int position) {
         Intent intent = new Intent(ZxzDetailsActivity.this, PlusImageActivity.class);
@@ -456,7 +449,8 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
                 } else {
                     qsMonth = month + "";
                 }
-                tvDcQssj.setText(year + "/" + qsMonth + "/" + day);
+
+                tvDcQssj.setText(year + "-" + qsMonth + "-" + day);
             }
         });
         //取消按钮，如果不需要直接不设置即可
@@ -491,7 +485,7 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
                 } else {
                     jzMonth = month + "";
                 }
-                tvDcJzsj.setText(year + "/" + jzMonth + "/" + day);
+                tvDcJzsj.setText(year + "-" + jzMonth + "-" + day);
             }
         });
         //取消按钮，如果不需要直接不设置即可
@@ -529,5 +523,18 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
     protected void onDestroy() {
         HttpUtils.cancleAllCall(this);
         super.onDestroy();
+    }
+
+    public String snQssj(String sj){
+        if ("查封开始时间".equals(sj)){
+            return "";
+        }
+        return tvDcQssj.getText() + " 00:00:00";
+    }
+    public String snJzsj(String sj){
+        if ("查封结束时间".equals(sj)){
+            return "";
+        }
+        return tvDcJzsj.getText() + " 00:00:00";
     }
 }

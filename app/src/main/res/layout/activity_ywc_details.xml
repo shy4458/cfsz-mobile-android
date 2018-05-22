@@ -46,17 +46,19 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="right|center_vertical"
                     android:text="案件号" />
 
                 <TextView
                     android:id="@+id/tv_ywc_ajh"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
                     android:gravity="center_vertical"
-                    android:text="0123456789" />
+                    android:text="0123456789"
+                    android:textColor="@color/colorBlack" />
 
             </LinearLayout>
 
@@ -66,17 +68,18 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="right|center_vertical"
                     android:text="地址" />
 
                 <TextView
                     android:id="@+id/tv_ywc_address"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="left|center_vertical"
                     android:text="哈尔滨市长春区沈阳镇北京村999号院99单元999层999号" />
 
                 <ImageView
@@ -95,15 +98,16 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="right|center_vertical"
                     android:text="计划时间" />
 
                 <TextView
                     android:id="@+id/tv_ywc_qssj"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="1900/01/01 09:00 " />
@@ -112,6 +116,7 @@
                     android:id="@+id/tv_ywc_jzsj"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="2000/01/01 23:59" />
@@ -124,15 +129,16 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="right|center_vertical"
                     android:text="转派人" />
 
                 <TextView
                     android:id="@+id/tv_ywc_zpr"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
                     android:gravity="center_vertical" />
 
             </LinearLayout>
@@ -140,7 +146,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
+                android:layout_height="2dp"
                 android:background="@color/colorBj" />
 
             <LinearLayout
@@ -167,11 +173,6 @@
 
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorBj" />
-
-            <TextView
                 android:id="@+id/tv_ywc_rwnr"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
@@ -182,7 +183,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
+                android:layout_height="2dp"
                 android:background="@color/colorBj" />
 
             <LinearLayout
@@ -208,10 +209,6 @@
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorBj" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -220,15 +217,12 @@
 
                 <TextView
                     android:id="@+id/tv_ywc_czlx"
-                    android:layout_width="120dp"
-                    android:layout_height="40dp">
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:gravity="center">
 
                 </TextView>
 
-                <TextView
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorBj" />
 
                 <LinearLayout
                     android:id="@+id/ll_ywc_bqsj"
@@ -239,8 +233,15 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="center"
+                            android:text="开始时间" />
 
                         <TextView
                             android:id="@+id/tv_ywc_dcQssj"
@@ -255,8 +256,15 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="center"
+                            android:text="结束时间" />
 
                         <TextView
                             android:id="@+id/tv_ywc_dcJzsj"
@@ -267,12 +275,11 @@
 
                     </LinearLayout>
                 </LinearLayout>
-
             </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
+                android:layout_height="2dp"
                 android:background="@color/colorBj" />
 
             <LinearLayout
@@ -304,11 +311,6 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/colorBj" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
@@ -328,7 +330,7 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"
+                    android:layout_height="2dp"
                     android:background="@color/colorBj" />
 
                 <LinearLayout
@@ -352,10 +354,6 @@
                         android:textColor="@color/colorTitle" />
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/colorBj" />
 
                 <!--展示上传的图片-->
                 <GridView
@@ -368,10 +366,6 @@
                     android:numColumns="auto_fit"
                     android:verticalSpacing="10dp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:background="@color/colorBj" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -407,8 +401,7 @@
                     <ListView
                         android:id="@+id/ywc_lvMp4"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                    </ListView>
+                        android:layout_height="wrap_content"></ListView>
 
                 </LinearLayout>
 

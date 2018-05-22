@@ -46,7 +46,6 @@ public class XrwFragment extends Fragment implements View.OnClickListener, ViewP
     private LinearLayout llDzx;
     private LinearLayout llYwc;
     private List<Fragment> list = new ArrayList<>();
-
     private ViewPager vp;
     private MainActivity activity;
     @SuppressLint("HandlerLeak")
@@ -127,6 +126,7 @@ public class XrwFragment extends Fragment implements View.OnClickListener, ViewP
         VpAdapter vpAdapter = new VpAdapter(getFragmentManager(), getActivity(), list);
         vp.setAdapter(vpAdapter);
         vp.addOnPageChangeListener(this);
+        vp.setOffscreenPageLimit(2);
     }
 
     @Override
@@ -261,22 +261,7 @@ public class XrwFragment extends Fragment implements View.OnClickListener, ViewP
     public void setAllYes() {
         dzxFragment.setAllYse();
         dzxFragment.setRefreshLoad(true);
-        dzxFragment.presenter.getData(1,AppConfig.ROWSNUMBER);
-    }
-    //对外提供刷新 三个任务列表
-    public void refrsh(){
-        if (dzxFragment != null){
-            dzxFragment.presenter.getData(1, AppConfig.ROWSNUMBER);
-            dzxFragment.dzxAllListRows.clear();
-        }
-        if (zxzFragment != null){
-            zxzFragment.presenter.getData(1, AppConfig.ROWSNUMBER);
-            zxzFragment.zxzAllListRows.clear();
-        }
-        if (ywcFragment != null && ywcFragment.persenter != null){
-            ywcFragment.persenter.getData(1, AppConfig.ROWSNUMBER);
-            ywcFragment.ywcAllListRows.clear();
-        }
-
+        dzxFragment.dzxAllListRows.clear();
+        dzxFragment.presenter.getData(1,AppConfig.ROWSNUMBER,1);
     }
 }

@@ -1,6 +1,7 @@
 package com.sx.cfsz.baseframework.http;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;

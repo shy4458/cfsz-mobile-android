@@ -65,7 +65,10 @@ public class YwcFragment extends Fragment {
                     ywcAllListRows.addAll(ywcListRows);
                     ywcLvAdapter = new YwcLvAdapter(YwcFragment.this.getActivity(), ywcAllListRows);
                     lvYwc.setAdapter(ywcLvAdapter);
-                    progressDialog.dismiss();
+                    if (page != 1){
+                        lvYwc.setSelection(page*10-12);
+                    }
+                    persenter.dialogDismis(1);
                     if (ywcAllListRows.size() < totalCount){
                         ywcRefresh.setEnableLoadMore(true);
                     }else {
@@ -90,7 +93,6 @@ public class YwcFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.ywc_fragment, container, false);
         initView(view);
-//        initData();
         initListener();
 
         return view;
@@ -103,12 +105,6 @@ public class YwcFragment extends Fragment {
     }
 
 
-    private void initData() {
-        progressDialog = ProgressDialog.show(getActivity(), "请稍等...", "正在刷新数据中... 请稍后...", true);
-        progressDialog.setCanceledOnTouchOutside(true);
-        this.progressDialog.setCanceledOnTouchOutside(true);
-        persenter.getData(1, AppConfig.ROWSNUMBER);
-    }
 
 
     private void initListener() {
@@ -119,7 +115,7 @@ public class YwcFragment extends Fragment {
                 ywcAllListRows.clear();
                 page = 1;
                 ywcRefresh.finishRefresh(1000);//刷新动画时间
-                persenter.getData(1, AppConfig.ROWSNUMBER);
+                persenter.getData(1, AppConfig.ROWSNUMBER,0);
             }
         });
 
@@ -128,7 +124,7 @@ public class YwcFragment extends Fragment {
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 ywcRefresh.finishLoadMore(1000);//上拉加载动画时间
                 page = page + 1;
-                persenter.getData(page, AppConfig.ROWSNUMBER);
+                persenter.getData(page, AppConfig.ROWSNUMBER,0);
 
             }
         });
@@ -156,6 +152,7 @@ public class YwcFragment extends Fragment {
                 intent.putExtra("Feedback_msg",ywcAllListRows.get(position).getFeedback_msg());
                 intent.putExtra("Feedback_pic",ywcAllListRows.get(position).getFeedback_pic());
                 intent.putExtra("Feedback_video",ywcAllListRows.get(position).getFeedback_video());
+                intent.putExtra("Task_type",ywcAllListRows.get(position).getTask_type());
                 startActivity(intent);
             }
         });
@@ -167,9 +164,7 @@ public class YwcFragment extends Fragment {
             if (ywcAllListRows != null) {
                 ywcAllListRows.clear();
             }
-            progressDialog = ProgressDialog.show(getActivity(), "请稍等...", "正在刷新数据中... 请稍后...", true);
-            progressDialog.setCanceledOnTouchOutside(true);
-            persenter.getData(1, AppConfig.ROWSNUMBER);
+            persenter.getData(1, AppConfig.ROWSNUMBER,1);
         }
         super.setUserVisibleHint(isVisibleToUser);
     }

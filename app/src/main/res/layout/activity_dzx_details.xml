@@ -54,9 +54,9 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="right|center_vertical"
                     android:text="案件号" />
 
                 <TextView
@@ -64,7 +64,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/colorBlack"
                     android:text="0123456789" />
 
             </LinearLayout>
@@ -75,16 +76,17 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="right|center_vertical"
                     android:text="地址" />
 
                 <TextView
                     android:id="@+id/tv_dzx_addres"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="left|center_vertical"
+                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:text="哈尔滨市长春区沈阳镇北京村999号院99单元999层999号" />
 
@@ -104,9 +106,9 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="right|center_vertical"
                     android:text="计划时间" />
 
                 <TextView
@@ -114,6 +116,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:layout_marginLeft="20dp"
                     android:gravity="center_vertical"
                     android:text="1900/01/01 09:00 " />
 
@@ -121,6 +124,7 @@
                     android:id="@+id/tv_dzx_zjsj"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="2000/01/01 23:59" />
@@ -133,13 +137,14 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="right|center_vertical"
                     android:text="转派人" />
 
                 <TextView
                     android:id="@+id/tv_dzx_zpr"
+                    android:layout_marginLeft="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
@@ -147,11 +152,9 @@
 
             </LinearLayout>
 
-
-
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
+                android:layout_height="2dp"
                 android:background="@color/colorBj" />
 
             <LinearLayout
@@ -176,10 +179,7 @@
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorBj" />
+
 
             <TextView
                 android:layout_marginTop="10dp"

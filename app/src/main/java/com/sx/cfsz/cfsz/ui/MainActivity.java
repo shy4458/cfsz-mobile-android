@@ -1,14 +1,16 @@
 package com.sx.cfsz.cfsz.ui;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -18,21 +20,35 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sx.cfsz.R;
 import com.sx.cfsz.baseframework.base.BaseApplication;
 import com.sx.cfsz.baseframework.http.HttpUtils;
+import com.sx.cfsz.cfsz.dagger.component.DaggerMainActivityComponent;
+import com.sx.cfsz.cfsz.dagger.module.MainActivityModule;
+import com.sx.cfsz.cfsz.presenter.MainActivityPresenter;
 import com.sx.cfsz.cfsz.ui.fgbl.FgblFragment;
 import com.sx.cfsz.cfsz.ui.msg.JstxFragment;
+import com.sx.cfsz.cfsz.ui.myView.CustomDialog;
 import com.sx.cfsz.cfsz.ui.tjfx.TjfxFragment;
 import com.sx.cfsz.cfsz.ui.xrw.activity.SearchActivity;
 import com.sx.cfsz.cfsz.ui.xrw.activity.UserActivity;
 import com.sx.cfsz.cfsz.ui.xrw.fragment.XrwFragment;
+import com.tencent.android.tpush.XGIOperateCallback;
+import com.tencent.android.tpush.XGPushClickedResult;
+import com.tencent.android.tpush.XGPushConfig;
+import com.tencent.android.tpush.XGPushManager;
+
+import java.security.Guard;
+
+import javax.inject.Inject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    @Inject
+    MainActivityPresenter presenter;
 
     private CircleImageView civHead;
     private TextView tvTitle;
@@ -53,16 +69,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int position = 0;   //导航fangment标识
     private JstxFragment jstxFragment;
     private FgblFragment fgblFragment;
+    private CustomDialog customDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        DaggerMainActivityComponent.builder().mainActivityModule(new MainActivityModule(this)).build().in(this);
         BaseApplication.addList(this);
         initView();
-        setTabSelection(0);
         initListener();
-
     }
 
     private void initView() {
@@ -75,10 +91,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rbTjfx = findViewById(R.id.rbTjfx);
         rbJstx = findViewById(R.id.rbJstx);
         rbFgbl = findViewById(R.id.rbFgbl);
-
         llDx = findViewById(R.id.llDx);
         tvYse = findViewById(R.id.tvYse);
         tvNo = findViewById(R.id.tvNo);
+
+        Intent intent = getIntent();
+        int post = intent.getIntExtra("userPost", 99);
+        if (post == 1) {
+            rbXrw.setVisibility(View.GONE);
+            setTabSelection(1);
+        } else {
+            setTabSelection(0);
+        }
+        initXg();
+    }
+
+    private void initXg() {
+        //本次集成采用信鸽的自动集成方式，无法查看服务类，官网查看具体步骤
+        XGPushConfig.enableDebug(this, true);
+        XGPushManager.registerPush(this, BaseApplication.get("userId", ""),
+                new XGIOperateCallback() {
+                    @Override
+                    public void onSuccess(Object data, int flag) {
+                        Log.d("TPush", "注册成功，设备token为：" + data);
+                            BaseApplication.set("token",data.toString());
+                        presenter.intTS(BaseApplication.get("userName", ""),BaseApplication.get("token",""));
+                    }
+
+                    @Override
+                    public void onFail(Object data, int errCode, String msg) {
+                        Log.d("TPush", "注册失败，错误码：" + errCode + ",错误信息：" + msg);
+                    }
+                });
+
 
     }
 
@@ -122,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     transaction.add(R.id.mainF, xrwFragment, "xrwFragment");
                 } else {
                     transaction.show(xrwFragment);
-                    xrwFragment.refrsh();
+//                    xrwFragment.refrsh();
                 }
                 break;
 
@@ -218,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (i == 3) {
             tvTitle.setText("法官笔录");
             ivSs.setVisibility(View.GONE);
-        } else if (i == 99){
+        } else if (i == 99) {
             tvTitle.setText("选择任务");
             llDx.setVisibility(View.VISIBLE);
             mainRg.setVisibility(View.GONE);
@@ -300,8 +345,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
     //对外提供页面切换
-    public void setSwitch(){
+    public void setSwitch() {
         tvTitle.setText("新任务");
         llDx.setVisibility(View.GONE);
         mainRg.setVisibility(View.VISIBLE);
@@ -312,4 +358,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         HttpUtils.cancleAllCall(this);
         super.onDestroy();
     }
+
+    //返回键不退出应用
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent home = new Intent(Intent.ACTION_MAIN);
+            home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            home.addCategory(Intent.CATEGORY_HOME);
+            startActivity(home);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void showDialog(Context context) {
+        if (customDialog == null) {
+            customDialog = new CustomDialog(context, R.style.CustomDialog);
+        }
+        customDialog.show();
+    }
+
+    public void disDialog() {
+        customDialog.dismiss();
+    }
+
 }

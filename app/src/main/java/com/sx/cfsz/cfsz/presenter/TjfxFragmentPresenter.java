@@ -8,11 +8,13 @@ import com.sx.cfsz.baseframework.base.AppConfig;
 import com.sx.cfsz.baseframework.http.HttpUtils;
 import com.sx.cfsz.baseframework.http.OnRequestResult;
 import com.sx.cfsz.cfsz.model.AjxqgkModel;
+import com.sx.cfsz.cfsz.model.CspmModel;
 import com.sx.cfsz.cfsz.model.GytjModel;
 import com.sx.cfsz.cfsz.model.RybaTjModel;
 import com.sx.cfsz.cfsz.ui.tjfx.TjfxFragment;
 
 import java.io.IOException;
+import java.lang.reflect.GenericSignatureFormatError;
 
 import okhttp3.Response;
 
@@ -86,5 +88,27 @@ public class TjfxFragmentPresenter {
                 }
             }
         });
+        //超时排名
+        String urlCspm = AppConfig.IP + AppConfig.CSPM;
+        HttpUtils.getAsync(urlCspm, fragment.getActivity(), new OnRequestResult() {
+            @Override
+            public void result(Exception e, Response response) {
+                if ( e == null){
+                    if (response != null && response.isSuccessful()){
+                        try {
+                            String str = response.body().string();
+                            Gson gson = new Gson();
+                            CspmModel cspmModel = gson.fromJson(str, CspmModel.class);
+                            fragment.successCspm(cspmModel);
+
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+
+
     }
 }

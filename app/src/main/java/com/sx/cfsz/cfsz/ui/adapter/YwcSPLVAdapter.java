@@ -30,25 +30,25 @@ public class YwcSPLVAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return spList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return position;
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = LayoutInflater.from(context).inflate(R.layout.lv_item_ywc_sp, parent, false);
         JZVideoPlayerStandard jzVideoPlayerStandard = view.findViewById(R.id.videoplayer);
-        jzVideoPlayerStandard.setUp(AppConfig.IP + AppConfig.DQSP + spList.get(position)
-                , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL,"");
+        String url = AppConfig.IP + AppConfig.DQSP + spList.get(position);
+        jzVideoPlayerStandard.setUp(url,JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL,"");
 
         return view;
     }

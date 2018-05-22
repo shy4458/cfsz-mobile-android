@@ -8,10 +8,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sx.cfsz.R;
 import com.sx.cfsz.baseframework.base.AppConfig;
+import com.sx.cfsz.baseframework.base.BaseApplication;
 import com.sx.cfsz.cfsz.ui.adapter.ViewPagerAdapter;
 import com.sx.cfsz.cfsz.ui.myView.CancelOrOkDialog;
 
@@ -28,6 +30,7 @@ public class PlusImageActivity extends AppCompatActivity implements ViewPager.On
     private ArrayList<String> imgList; //图片的数据源
     private int mPosition; //第几张图片
     private ViewPagerAdapter mAdapter;
+    private String shanchu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,20 +39,36 @@ public class PlusImageActivity extends AppCompatActivity implements ViewPager.On
 
         imgList = getIntent().getStringArrayListExtra(AppConfig.IMG_LIST);
         mPosition = getIntent().getIntExtra(AppConfig.POSITION, 0);
+        shanchu = getIntent().getStringExtra("shanchu");
         initView();
     }
 
     private void initView() {
+        BaseApplication.addList(this);
+
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         positionTv = (TextView) findViewById(R.id.position_tv);
+
+
         findViewById(R.id.back_iv).setOnClickListener(this);
-        findViewById(R.id.delete_iv).setOnClickListener(this);
+        ImageView ivDelete = findViewById(R.id.delete_iv);
+
+        if ("000".equals(shanchu)){
+            ivDelete.setVisibility(View.GONE);
+        }else {
+            ivDelete.setVisibility(View.VISIBLE);
+        }
+
+        ivDelete.setOnClickListener(this);
         viewPager.addOnPageChangeListener(this);
 
         mAdapter = new ViewPagerAdapter(this, imgList);
         viewPager.setAdapter(mAdapter);
         positionTv.setText(mPosition + 1 + "/" + imgList.size());
         viewPager.setCurrentItem(mPosition);
+
+
+
     }
 
     //删除图片
@@ -64,8 +83,6 @@ public class PlusImageActivity extends AppCompatActivity implements ViewPager.On
             }
         };
         dialog.show();
-
-
     }
 
     private void showNormalDialog(){

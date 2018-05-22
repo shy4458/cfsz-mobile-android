@@ -54,7 +54,9 @@
 
         <activity
             android:name=".cfsz.ui.MainActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" >
+
+        </activity>
 
         <activity
             android:name=".cfsz.ui.xrw.activity.SearchActivity"

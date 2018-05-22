@@ -46,7 +46,7 @@ public class YwcGVAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(context).inflate(R.layout.grid_item, parent,false);
         ImageView iv = convertView.findViewById(R.id.pic_iv);
-        Glide.with(context).load(AppConfig.IP + AppConfig.DQZP + zpList.get(position)).into(iv);
+        Glide.with(context).load(zpList.get(position)).into(iv);
         return convertView;
     }
 }

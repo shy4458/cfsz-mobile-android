@@ -1,7 +1,5 @@
 package com.sx.cfsz.cfsz.presenter;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.sx.cfsz.baseframework.base.AppConfig;
 import com.sx.cfsz.baseframework.http.HttpUtils;
@@ -43,8 +41,6 @@ public class SearchActivityPresenter {
                 }
             }
         });
-
-
     }
     //案件号模糊搜索
     public void ajhSearch(String ajh) {

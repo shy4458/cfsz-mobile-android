@@ -77,18 +77,20 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
             }
         }
     };
+    private String task_address;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dzx_details);
+        BaseApplication.addList(this);
         DaggerDzxDetailsComponent.builder().dzxDetailsModule(new DzxDetailsModule(this)).build().in(this);
 
         initView();
 
         Intent intent = getIntent();
         String task_num = intent.getStringExtra("Task_num");
-        String task_address = intent.getStringExtra("Task_address");
+        task_address = intent.getStringExtra("Task_address");
         String plan_time_start = intent.getStringExtra("Plan_time_start");
         String plan_time_end = intent.getStringExtra("Plan_time_end");
         String task_content = intent.getStringExtra("Task_content");
@@ -100,7 +102,7 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
         if (oldName == null) {
             tvZpr.setText("未转派");
         } else {
-            tvZpr.setText("转派人 ： " + oldName);
+            tvZpr.setText(oldName);
         }
         tvAjh.setText(task_num);
         tvAddres.setText(task_address);
@@ -142,7 +144,7 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
             case R.id.iv_navige:
                 //调起高德导航
                 if (isInstallByRead("com.autonavi.minimap")) {
-                    goToNaviActivity(DzxDetailsActivity.this, "", "", task_lat, task_lng, "0", "2");
+                    goToNaviActivity(DzxDetailsActivity.this, "", task_address, task_lat, task_lng, "0", "2");
                 }else {
                     UIUtils.showToast(DzxDetailsActivity.this,"未安装高德地图客户端");
                 }

@@ -3,6 +3,7 @@ package com.sx.cfsz.baseframework.base;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,7 +24,6 @@ public class BaseApplication extends Application {
     private static List<Activity> list = new ArrayList<>();
     @SuppressLint("StaticFieldLeak")
     private static Context globalContext;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -71,16 +71,20 @@ public class BaseApplication extends Application {
 
             }
         });
+
     }
 
-    public static void addList(Activity activity){
+
+    public static void addList(Activity activity) {
         list.add(activity);
     }
-    public static void clenList(){
-       for (Activity activity : list){
-           activity.finish();
-       }
+
+    public static void clenList() {
+        for (Activity activity : list) {
+            activity.finish();
+        }
     }
+
 
     public static Context context() {
         return globalContext;

@@ -3,20 +3,17 @@ package com.sx.cfsz.cfsz.ui.tjfx;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -30,40 +27,28 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.BubbleData;
-import com.github.mikephil.charting.data.BubbleDataSet;
-import com.github.mikephil.charting.data.BubbleEntry;
-import com.github.mikephil.charting.data.CandleData;
-import com.github.mikephil.charting.data.CandleDataSet;
-import com.github.mikephil.charting.data.CandleEntry;
-import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.data.ScatterData;
-import com.github.mikephil.charting.data.ScatterDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.renderer.YAxisRenderer;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.sx.cfsz.R;
 import com.sx.cfsz.cfsz.dagger.component.DaggerTjfxFragmentComponent;
-import com.sx.cfsz.cfsz.dagger.component.DaggerXrwFragmentComponent;
 import com.sx.cfsz.cfsz.dagger.module.TjfxFragmentModule;
-import com.sx.cfsz.cfsz.dagger.module.XrwFragmentModule;
 import com.sx.cfsz.cfsz.model.AjxqgkModel;
+import com.sx.cfsz.cfsz.model.CspmModel;
 import com.sx.cfsz.cfsz.model.GytjModel;
 import com.sx.cfsz.cfsz.model.RybaTjModel;
 import com.sx.cfsz.cfsz.presenter.TjfxFragmentPresenter;
-import com.sx.cfsz.cfsz.ui.myView.ColumnLineView;
+import com.sx.cfsz.cfsz.ui.adapter.CspmLvAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +78,7 @@ public class TjfxFragment extends Fragment implements OnChartValueSelectedListen
     private static final int AJSL = 600;
     private static final int GYTJ = 601;
     private static final int RYBATJ = 602;
+    private static final int CSPM = 603;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -120,12 +106,22 @@ public class TjfxFragment extends Fragment implements OnChartValueSelectedListen
                     setBarData(data);
 
                     break;
+
+                case CSPM:
+                    CspmModel cspmModel = (CspmModel) msg.obj;
+                    List<CspmModel.DataBean> cspmList = cspmModel.getData();
+                    CspmLvAdapter cspmLvAdapter = new CspmLvAdapter(getActivity(), cspmList);
+                    lvCspm.setAdapter(cspmLvAdapter);
+                    scrollView.scrollTo(0,0);
+                    break;
                 default:
                     break;
             }
         }
     };
     private BarChart bc;
+    private ListView lvCspm;
+    private ScrollView scrollView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -145,11 +141,12 @@ public class TjfxFragment extends Fragment implements OnChartValueSelectedListen
 
     @Override
     public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
+        if (!hidden){
+            initData();
+        }
     }
-
-
     private void initView(View view) {
+        scrollView = view.findViewById(R.id.scrollView);
         tvQb = view.findViewById(R.id.tv_tj_qb);
         tvYgwc = view.findViewById(R.id.tv_tj_ygwc);
         tvSjwc = view.findViewById(R.id.tv_tj_sjwc);
@@ -159,6 +156,11 @@ public class TjfxFragment extends Fragment implements OnChartValueSelectedListen
         mChart = view.findViewById(R.id.piechart);
         cc = view.findViewById(R.id.cc);
         bc = view.findViewById(R.id.bc);
+
+        lvCspm = view.findViewById(R.id.lv_cspm);
+        View hardView = LayoutInflater.from(getActivity()).inflate(R.layout.lv_cs_hard, null);//得到头部的布局
+        lvCspm.addHeaderView(hardView);
+
 
         initBc();
         initPieChart();
@@ -186,7 +188,12 @@ public class TjfxFragment extends Fragment implements OnChartValueSelectedListen
         msg.obj = rybaTjModel;
         mHandler.sendMessage(msg);
     }
-
+    public void successCspm(CspmModel cspmModel) {
+        Message msg = Message.obtain();
+        msg.what = CSPM;
+        msg.obj = cspmModel;
+        mHandler.sendMessage(msg);
+    }
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
@@ -298,6 +305,14 @@ public class TjfxFragment extends Fragment implements OnChartValueSelectedListen
             data.setBarWidth(0.9f);
             bc.setData(data);
         }
+//        显示整数
+        set1.setValueFormatter(new IValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+
+                return (int)value + "";
+            }
+        });
     }
 
     //饼状图
@@ -372,6 +387,7 @@ public class TjfxFragment extends Fragment implements OnChartValueSelectedListen
         mChart.invalidate();
 
     }
+
 
 
 }

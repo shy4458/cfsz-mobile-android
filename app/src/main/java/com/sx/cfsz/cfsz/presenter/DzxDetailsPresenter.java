@@ -53,7 +53,7 @@ public class DzxDetailsPresenter  {
                     if (response != null && response.isSuccessful()){
                         try {
                             String str = response.body().string();
-                            Gson gson = new Gson();
+
 
                         } catch (IOException e1) {
                             e1.printStackTrace();

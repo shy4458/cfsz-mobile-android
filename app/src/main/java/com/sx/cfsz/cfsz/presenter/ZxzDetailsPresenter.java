@@ -102,19 +102,17 @@ public class ZxzDetailsPresenter {
 //                });
             String url = AppConfig.IP + AppConfig.VIDEO;
             FileInfo[] fileInfos = new FileInfo[mp4List.size()];
-            HashMap<String, String> map = new HashMap<>();
             FileInfo fileInfo;
             for (int i = 0; i < mp4List.size(); i++) {
                 fileInfo = new FileInfo();
                 File file = new File(mp4List.get(i));
-                map.put("" + i, mp4List.get(i));
                 fileInfo.setFormName("sp" + i);
                 fileInfo.setFileType(FileType.AUDIO);
                 fileInfo.setFile(file);
                 fileInfos[i] = fileInfo;
             }
 
-            HttpUtils.postFilesAsync(url, activity/*, map*/, fileInfos, new OnRequestResult() {
+            HttpUtils.postFilesAsync(url, activity, fileInfos, new OnRequestResult() {
                 @Override
                 public void result(Exception e, Response response) {
                     if (e == null) {
@@ -134,9 +132,10 @@ public class ZxzDetailsPresenter {
         }
     }
 
-    public void feed(String user_id, String task_id, Editable text, String zp, String sp, String s1) {
+    public void feed(String user_id, String task_id, Editable text, String zp, String sp, String s1,String qssj ,String jzsj) {
+
         String feedUrl = AppConfig.IP + AppConfig.FEED + AppConfig.ID + user_id + AppConfig.RWID + task_id + AppConfig.FEEDCONTENT + text
-                + AppConfig.ZPURL + zp + AppConfig.SPURL + sp + AppConfig.RESULT + s1;
+                + AppConfig.ZPURL + zp + AppConfig.SPURL + sp + AppConfig.RESULT + s1 + AppConfig.FYQSSJ + qssj + AppConfig.FYJSSJ + jzsj;
         HttpUtils.getAsync(feedUrl, activity, new OnRequestResult() {
             @Override
             public void result(Exception e, Response response) {

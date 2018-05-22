@@ -97,7 +97,7 @@ public class DzxLvAdapter extends BaseAdapter {
             viewHolder.checkBox.setVisibility(View.GONE);
         }
         //标题
-        viewHolder.tvAjh.setText(list.get(position).getTask_num());
+        viewHolder.tvAjh.setText(position + 1 + ".   " + list.get(position).getTask_num());
         viewHolder.tvAddress.setText(list.get(position).getTask_address());
         viewHolder.tvContent.setText(list.get(position).getTask_content());
         viewHolder.tvSj.setText(list.get(position).getPlan_time_start() + "至" + list.get(position).getPlan_time_end());
@@ -142,6 +142,7 @@ public class DzxLvAdapter extends BaseAdapter {
         TextView tvAddress;
         TextView tvSj;
     }
+
 
 
 }

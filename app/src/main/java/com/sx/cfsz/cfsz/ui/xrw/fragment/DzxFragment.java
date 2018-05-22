@@ -14,8 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -33,6 +35,7 @@ import com.sx.cfsz.cfsz.model.SubmitModel;
 import com.sx.cfsz.cfsz.presenter.DzxFragmentPresenter;
 import com.sx.cfsz.cfsz.ui.MainActivity;
 import com.sx.cfsz.cfsz.ui.adapter.DzxLvAdapter;
+import com.sx.cfsz.cfsz.ui.myView.CustomDialog;
 import com.sx.cfsz.cfsz.ui.xrw.activity.DzxDetailsActivity;
 
 import java.util.ArrayList;
@@ -62,7 +65,6 @@ public class DzxFragment extends Fragment {
     public int page = 1;    //页码
     private int state =0;   //首次加载标识
     private int totalCount; //数据总数
-    private ProgressDialog progressDialog;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -77,12 +79,16 @@ public class DzxFragment extends Fragment {
                     dzxAllListRows.addAll(dzxListRows);
                     dzxLvAdapter = new DzxLvAdapter(DzxFragment.this.getActivity(), dzxAllListRows);
                     lvDzx.setAdapter(dzxLvAdapter);
-                    progressDialog.dismiss();
+                    if (page != 1){
+                        lvDzx.setSelection(page*10-12);
+                    }
+                    presenter.dialogDismis();
                     if (dzxAllListRows.size() < totalCount){
                         dzxRefresh.setEnableLoadMore(true);
                     }else {
                         dzxRefresh.setEnableLoadMore(false);
                     }
+
                     break;
                 case ALLSUBMIT:
                     SubmitModel submitModel = (SubmitModel) msg.obj;
@@ -93,9 +99,8 @@ public class DzxFragment extends Fragment {
                     if (dzxAllListRows != null) {
                         dzxAllListRows.clear();
                     }
-                    progressDialog = ProgressDialog.show(getActivity(), "请稍等...", "正在刷新数据中... 请稍后...", true);
-                    progressDialog.setCanceledOnTouchOutside(true);
-                    presenter.getData(1, AppConfig.ROWSNUMBER);
+
+                    presenter.getData(1, AppConfig.ROWSNUMBER,1);
                 default:
                     break;
             }
@@ -134,10 +139,8 @@ public class DzxFragment extends Fragment {
     }
 
     private void initData() {
-        progressDialog = ProgressDialog.show(getActivity(), "请稍等...", "正在刷新数据中... 请稍后...", true);
-        progressDialog.setProgressStyle(R.drawable.progress_small);
-        this.progressDialog.setCanceledOnTouchOutside(true);
-        presenter.getData(1, AppConfig.ROWSNUMBER);
+
+        presenter.getData(1, AppConfig.ROWSNUMBER,1);
     }
 
     private void initListener() {
@@ -148,7 +151,7 @@ public class DzxFragment extends Fragment {
                 dzxAllListRows.clear();
                 page = 1;
                 dzxRefresh.finishRefresh(1000);//刷新动画时间
-                presenter.getData(1, AppConfig.ROWSNUMBER);
+                presenter.getData(1, AppConfig.ROWSNUMBER,0);
             }
         });
         dzxRefresh.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -156,7 +159,7 @@ public class DzxFragment extends Fragment {
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 dzxRefresh.finishLoadMore(1000);//上拉加载动画时间
                 page = page + 1;
-                presenter.getData(page, AppConfig.ROWSNUMBER);
+                presenter.getData(page, AppConfig.ROWSNUMBER,0);
 
             }
         });
@@ -202,9 +205,7 @@ public class DzxFragment extends Fragment {
             if (dzxAllListRows != null) {
                 dzxAllListRows.clear();
             }
-            progressDialog = ProgressDialog.show(getActivity(), "请稍等...", "正在刷新数据中... 请稍后...", true);
-            progressDialog.setCanceledOnTouchOutside(true);
-            presenter.getData(1, AppConfig.ROWSNUMBER);
+            presenter.getData(1, AppConfig.ROWSNUMBER,1);
         }
         super.setUserVisibleHint(isVisibleToUser);
     }
@@ -220,7 +221,7 @@ public class DzxFragment extends Fragment {
                 if (dzxAllListRows != null) {
                     dzxAllListRows.clear();
                 }
-                presenter.getData(1, AppConfig.ROWSNUMBER);
+                presenter.getData(1, AppConfig.ROWSNUMBER,1);
             }
         }
     }
@@ -268,8 +269,7 @@ public class DzxFragment extends Fragment {
     }
     //执行后刷新本界面
     public void refresh(){
-        progressDialog = ProgressDialog.show(getActivity(), "请稍等...", "正在刷新数据中... 请稍后...", true);
-        progressDialog.setCanceledOnTouchOutside(true);
-        presenter.getData(1, AppConfig.ROWSNUMBER);
+
+        presenter.getData(1, AppConfig.ROWSNUMBER,1);
     }
 }

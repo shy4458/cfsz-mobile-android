@@ -54,15 +54,17 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="right|center_vertical"
                     android:text="案件号" />
 
                 <TextView
+                    android:layout_marginLeft="20dp"
                     android:id="@+id/tv_zxz_ajh"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textColor="@color/colorBlack"
                     android:gravity="center_vertical"
                     android:text="0123456789" />
 
@@ -74,9 +76,9 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="right|center_vertical"
                     android:text="地址" />
 
                 <TextView
@@ -84,7 +86,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="left|center_vertical"
                     android:text="哈尔滨市长春区沈阳镇北京村999号院99单元999层999号" />
 
                 <ImageView
@@ -103,9 +106,9 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="right|center_vertical"
                     android:text="计划时间" />
 
                 <TextView
@@ -113,6 +116,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:layout_marginLeft="20dp"
                     android:gravity="center_vertical"
                     android:text="1900/01/01 09:00 " />
 
@@ -121,6 +125,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:layout_marginLeft="20dp"
                     android:gravity="center_vertical"
                     android:text="2000/01/01 23:59" />
 
@@ -132,15 +137,16 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="right|center_vertical"
                     android:text="转派人" />
 
                 <TextView
                     android:id="@+id/tv_zxz_zpr"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
                     android:gravity="center_vertical" />
 
             </LinearLayout>
@@ -148,7 +154,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
+                android:layout_height="2dp"
                 android:background="@color/colorBj" />
 
             <LinearLayout
@@ -175,11 +181,6 @@
 
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorBj" />
-
-            <TextView
                 android:id="@+id/tv_zxz_rwnr"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
@@ -190,7 +191,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
+                android:layout_height="2dp"
                 android:background="@color/colorBj" />
 
             <LinearLayout
@@ -216,10 +217,7 @@
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/colorBj" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -228,16 +226,13 @@
 
                 <Spinner
                     android:id="@+id/spi"
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="40dp"
                     android:gravity="center">
 
                 </Spinner>
 
-                <TextView
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorBj" />
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -245,7 +240,6 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/ll_dcQssj"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
@@ -257,20 +251,19 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="2000-01-01" />
+                            android:text="查封开始时间" />
 
                         <ImageView
                             android:id="@+id/iv_dcQssj"
                             android:layout_marginRight="50dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="8dp"
+                            android:layout_height="16dp"
                             android:layout_gravity="center"
                             android:background="@drawable/search_right_back" />
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/ll_dcJzsj"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
@@ -282,13 +275,13 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="2008-08-08" />
+                            android:text="查封结束时间" />
 
                         <ImageView
                             android:id="@+id/iv_dcJzsj"
                             android:layout_marginRight="50dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="8dp"
+                            android:layout_height="16dp"
                             android:layout_gravity="center"
                             android:background="@drawable/search_right_back" />
 
@@ -302,9 +295,8 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
+                android:layout_height="2dp"
                 android:background="@color/colorBj" />
-
             <LinearLayout
                 android:id="@+id/ll_gong_visi"
                 android:layout_width="match_parent"
@@ -334,10 +326,7 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/colorBj" />
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -358,7 +347,7 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"
+                    android:layout_height="2dp"
                     android:background="@color/colorBj" />
 
                 <LinearLayout
@@ -382,10 +371,7 @@
                         android:textColor="@color/colorTitle" />
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/colorBj" />
+
 
                 <!--展示上传的图片-->
                 <GridView
@@ -400,7 +386,7 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"
+                    android:layout_height="2dp"
                     android:background="@color/colorBj" />
 
                 <LinearLayout
@@ -423,11 +409,6 @@
                         android:text="拍摄视频"
                         android:textColor="@color/colorTitle" />
                 </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/colorBj" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
