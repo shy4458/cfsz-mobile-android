@@ -64,13 +64,11 @@ dependencies {
     implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'
     //视频的依赖
     compile 'cn.jzvd:jiaozivideoplayer:6.2.9'
+    compile 'fm.jiecao:jiecaovideoplayer:5.5.2'
     //图表
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     //下拉刷新上拉加载框架
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-5'
-    //    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-5'//没有使用特殊Header，可以不加这行
-    //上传请求进度条
-    compile 'io.github.lizhangqu:coreprogress:1.0.2'
     //压缩
     implementation project(':ffmpeg4android_lib')
 }

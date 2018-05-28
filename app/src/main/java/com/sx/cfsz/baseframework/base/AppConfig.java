@@ -1,5 +1,9 @@
 package com.sx.cfsz.baseframework.base;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+
 import java.util.Calendar;
 
 public class AppConfig {
@@ -100,6 +104,10 @@ public class AppConfig {
     public static final String AJLXTJ = "task/ajlxtj";
     //超时排名
     public static final String CSPM = "task/cspm";
+    //版本号
+    public static final String BB = "task/selectversion";
+    //更新地址
+    public static final String PATH = "task/downloadPackage";
 
 
 
@@ -109,11 +117,17 @@ public class AppConfig {
 
 
 
-
-
-
-
-
+    public static int getPackageCode(Context context) {
+        PackageManager manager = context.getPackageManager();
+        int code = 0;
+        try {
+            PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+            code = info.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return code;
+    }
 
     public static String getDate() {
         Calendar c = Calendar.getInstance();//

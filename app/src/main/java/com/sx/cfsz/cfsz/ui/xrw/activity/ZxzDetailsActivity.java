@@ -1,16 +1,23 @@
 package com.sx.cfsz.cfsz.ui.xrw.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -66,6 +73,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static android.Manifest.permission.RECORD_AUDIO;
 
 /***       Author  shy              反馈
  *         Time   2018/4/12 0012    14:41      */
@@ -133,18 +142,18 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
                             BaseApplication.get("zp", ""),
                             BaseApplication.get("sp", ""),
                             strSelecte,
-                            snQssj(tvDcQssj.getText()+""),
-                            snJzsj(tvDcJzsj.getText()+"")
+                            snQssj(tvDcQssj.getText() + ""),
+                            snJzsj(tvDcJzsj.getText() + "")
                     );
                     break;
 
                 case CG:
                     customDialog.dismiss();
                     Intent intent = new Intent();
-                    intent.putExtra("state","30");
-                    ZxzDetailsActivity.this.setResult(RESULT_OK,intent);
+                    intent.putExtra("state", "30");
+                    ZxzDetailsActivity.this.setResult(RESULT_OK, intent);
                     finish();
-                    UIUtils.showToast(ZxzDetailsActivity.this,"反馈成功");
+                    UIUtils.showToast(ZxzDetailsActivity.this, "反馈成功");
                     break;
 
                 default:
@@ -229,6 +238,17 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         lvMp4Adapter = new LvMp4Adapter(ZxzDetailsActivity.this, mp4List);
         lvMp4.setAdapter(lvMp4Adapter);
 
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(ZxzDetailsActivity.this,
+                        new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO},
+                        1);
+
+            }
+        }
     }
 
     private void initSpi() {
@@ -327,7 +347,6 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    //视频播放
     @Override
     public void onBackPressed() {
         if (JZVideoPlayer.backPress()) {
@@ -336,7 +355,6 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         super.onBackPressed();
     }
 
-    //视频播放
     @Override
     protected void onPause() {
         super.onPause();
@@ -519,20 +537,22 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         msg.obj = "";
         mHandler.sendMessage(msg);
     }
+
     @Override
     protected void onDestroy() {
         HttpUtils.cancleAllCall(this);
         super.onDestroy();
     }
 
-    public String snQssj(String sj){
-        if ("查封开始时间".equals(sj)){
+    public String snQssj(String sj) {
+        if ("查封开始时间".equals(sj)) {
             return "";
         }
         return tvDcQssj.getText() + " 00:00:00";
     }
-    public String snJzsj(String sj){
-        if ("查封结束时间".equals(sj)){
+
+    public String snJzsj(String sj) {
+        if ("查封结束时间".equals(sj)) {
             return "";
         }
         return tvDcJzsj.getText() + " 00:00:00";

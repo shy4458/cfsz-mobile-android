@@ -186,6 +186,7 @@ public class XrwFragment extends Fragment implements View.OnClickListener, ViewP
     public void onPageSelected(int position) {
         activity.setSwitch();
         switch (position) {
+
             case 0:
                 llZxz.setBackground(getResources().getDrawable(R.drawable.shape_corner_rwxq));
                 llDzx.setBackground(getResources().getDrawable(R.drawable.shape_corner_rwxq_y));

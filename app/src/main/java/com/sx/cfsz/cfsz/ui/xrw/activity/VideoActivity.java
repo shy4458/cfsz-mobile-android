@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.sx.cfsz.R;
 import com.sx.cfsz.baseframework.base.BaseApplication;
+import com.sx.cfsz.baseframework.util.UIUtils;
 import com.sx.cfsz.cfsz.ui.myView.BothWayProgressBar;
 
 import java.io.File;
@@ -32,8 +33,11 @@ import java.util.List;
 /***       Author  shy
  *         Time   2018/4/17 0017    9:28      */
 
-public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Callback, BothWayProgressBar.OnProgressEndListener, View.OnTouchListener {
+public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Callback, BothWayProgressBar.OnProgressEndListener, View.OnTouchListener{
     private static final int LISTENER_START = 200;
+    private static final int LING = 0;
+    private static final int YI = 1;
+    private static final int ER = 2;
     //预览SurfaceView
     private SurfaceView mSurfaceView;
     private Camera mCamera;
@@ -62,6 +66,7 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
     private GestureDetector mDetector;
     //是否放大
     private boolean isZoomIn = false;
+    private boolean prepared = false;// MediaRecord 是否准备完成
     private MyHandler mHandler;
     private TextView mTvTip;
     private boolean isRunning;
@@ -78,7 +83,6 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d("/////", "onStart: ");
     }
 
     private void initView() {
@@ -152,9 +156,6 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
         if (mCamera == null) {
             mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
         }
-        if (mMediaRecorder == null) {
-            mMediaRecorder = new MediaRecorder();
-        }
         if (mCamera != null) {
             mCamera.setDisplayOrientation(90);
             try {
@@ -180,45 +181,51 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
      * 开始录制
      */
     private void startRecord() {
-        if (mMediaRecorder != null) {
-            //没有外置存储, 直接停止录制
-            if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                return;
+        if (mMediaRecorder == null) {
+            mMediaRecorder = new MediaRecorder();
+        }
+        //没有外置存储, 直接停止录制
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            return;
+        }
+        try {
+            mCamera.unlock();
+            mMediaRecorder.setCamera(mCamera);
+            //从相机采集视频
+            mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+            // 从麦克采集音频信息
+            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            // TODO: 2016/10/20  设置视频格式
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mMediaRecorder.setVideoSize(videoWidth, videoHeight);
+            //每秒的帧数
+            mMediaRecorder.setVideoFrameRate(30);
+            //编码格式
+            mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            // 设置帧频率，然后就清晰了，文件大小也会变化
+            mMediaRecorder.setVideoEncodingBitRate(1024 * 1024);
+            File targetDir = Environment.
+                    getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+            if (!targetDir.exists()) {
+                targetDir.mkdirs();
             }
-            try {
-                mMediaRecorder.reset();
-                mCamera.unlock();
-                mMediaRecorder.setCamera(mCamera);
-                //从相机采集视频
-                mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-                // 从麦克采集音频信息
-                mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                // TODO: 2016/10/20  设置视频格式
-                mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-                mMediaRecorder.setVideoSize(videoWidth, videoHeight);
-                //每秒的帧数
-                mMediaRecorder.setVideoFrameRate(5);
-                //编码格式
-                mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-                mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-                // 设置帧频率，然后就清晰了，文件大小也会变化
-                mMediaRecorder.setVideoEncodingBitRate(1024 * 1024);
-                File targetDir = Environment.
-                        getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
-                l = SystemClock.currentThreadTimeMillis();
-                mTargetFile = new File(targetDir,
-                        l + ".mp4");
-                mMediaRecorder.setOutputFile(mTargetFile.getAbsolutePath());
-                mMediaRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
-                //解决录制视频, 播放器横向问题
-                mMediaRecorder.setOrientationHint(90);
-                mMediaRecorder.prepare();
-                //正式录制
-                mMediaRecorder.start();
-                isRecording = true;
-            } catch (Exception e) {
-                e.printStackTrace();
+
+            l = SystemClock.currentThreadTimeMillis();
+            mTargetFile = new File(targetDir,
+                    l + ".mp4");
+            if (!mTargetFile.exists()) {
+                mTargetFile.createNewFile();
             }
+            mMediaRecorder.setOutputFile(mTargetFile.getAbsolutePath());
+            mMediaRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
+            //解决录制视频, 播放器横向问题
+            mMediaRecorder.setOrientationHint(90);
+            mMediaRecorder.prepare();
+            mMediaRecorder.start();
+            isRecording = true;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -232,19 +239,15 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
      * 停止录制 并且保存
      */
     private void stopRecordSave() {
+        isRunning = false;
         if (isRecording) {
-            isRunning = false;
-            mMediaRecorder.stop();
-            isRecording = false;
-            Toast.makeText(this, "视频已经放至" + mTargetFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-            Log.d("onSuccess1",mTargetFile.getAbsolutePath());
-
+            stopRecord();
+            UIUtils.showToast(this, "视频已经放至" + mTargetFile.getAbsolutePath());
+            Log.d("onSuccess1", mTargetFile.getAbsolutePath());
             Intent intent = new Intent();
-            intent.putExtra("mp4Url",mTargetFile.getAbsolutePath());
-            VideoActivity.this.setResult(RESULT_OK,intent);
+            intent.putExtra("mp4Url", mTargetFile.getAbsolutePath());
+            VideoActivity.this.setResult(RESULT_OK, intent);
             super.finish();
-
-
         }
     }
 
@@ -252,15 +255,28 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
      * 停止录制, 不保存
      */
     private void stopRecordUnSave() {
-        if (isRecording) {
-            isRunning = false;
-            mMediaRecorder.stop();
-            isRecording = false;
-            if (mTargetFile.exists()) {
-                //不保存直接删掉
-                mTargetFile.delete();
-            }
+        isRunning = false;
+        if (mMediaRecorder != null && isRecording) {
+            stopRecord();
         }
+        if (mTargetFile.exists()) {
+            //不保存直接删掉
+            mTargetFile.delete();
+        }
+    }
+
+    private void stopRecord() {
+        isRecording = false;
+
+        try{
+            mMediaRecorder.stop();
+        } catch(RuntimeException stopException){
+            //TODO 拍摄视频短按会抛出此异常
+        }
+//        mMediaRecorder.stop();
+        mMediaRecorder.reset();
+        mMediaRecorder.release();
+        mMediaRecorder = null;
     }
 
     /**
@@ -288,7 +304,7 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
     ///////////////////////////////////////////////////////////////////////////
     // Handler处理
     ///////////////////////////////////////////////////////////////////////////
-    private static class MyHandler extends Handler {
+    private class MyHandler extends Handler {
         private WeakReference<VideoActivity> mReference;
         private VideoActivity mActivity;
 
@@ -300,9 +316,15 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case 0:
+                case LING:
                     mActivity.mProgressBar.setProgress(mActivity.mProgress);
                     break;
+                case YI:
+                    mActivity.mProgressBar.setCancel(true);
+                    break;
+//                case ER:
+//                    VideoActivity.this.mMediaRecorder.start();
+//                    VideoActivity.this.isRecording = true;
             }
         }
     }
@@ -340,10 +362,11 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
                             downY = ey;
                             // TODO: 2016/10/20 开始录制视频, 进度条开始走
                             mProgressBar.setVisibility(View.VISIBLE);
+                            mProgressBar.setProgress(0);
+                            isCancel = false;
                             //开始录制
-                            Toast.makeText(this, "开始录制", Toast.LENGTH_SHORT).show();
+                            UIUtils.showToast(this, "开始录制");
                             startRecord();
-
                             mProgressThread = new Thread() {
                                 @Override
                                 public void run() {
@@ -351,9 +374,10 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
                                     try {
                                         mProgress = 0;
                                         isRunning = true;
+                                        //mHandler.obtainMessage(ER).sendToTarget();
                                         while (isRunning) {
                                             mProgress++;
-                                            mHandler.obtainMessage(0).sendToTarget();
+                                            mHandler.obtainMessage(LING).sendToTarget();
                                             Thread.sleep(80);
                                         }
                                     } catch (InterruptedException e) {
@@ -361,35 +385,32 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
                                     }
                                 }
                             };
-
                             mProgressThread.start();
                             ret = true;
                         }
-
-
                         break;
                     case MotionEvent.ACTION_UP:
                         if (ex > left && ex < right) {
                             mTvTip.setVisibility(View.INVISIBLE);
                             mProgressBar.setVisibility(View.INVISIBLE);
+                            mHandler.obtainMessage(YI).sendToTarget();
                             //判断是否为录制结束, 或者为成功录制(时间过短)
                             if (!isCancel) {
                                 if (mProgress < 50) {
                                     //时间太短不保存
                                     stopRecordUnSave();
-                                    Toast.makeText(this, "时间太短", Toast.LENGTH_SHORT).show();
-                                    break;
+                                    UIUtils.showToast(this, "时间太短");
+                                } else {
+                                    //停止录制
+                                    stopRecordSave();
                                 }
-                                //停止录制
-                                stopRecordSave();
                             } else {
                                 //现在是取消状态,不保存
                                 stopRecordUnSave();
                                 isCancel = false;
-                                Toast.makeText(this, "取消录制", Toast.LENGTH_SHORT).show();
+                                UIUtils.showToast(this, "取消录制");
                                 mProgressBar.setCancel(false);
                             }
-
                             ret = false;
                         }
                         break;
@@ -399,14 +420,13 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
                             if (downY - currentY > 10) {
                                 isCancel = true;
                                 mProgressBar.setCancel(true);
+                                stopRecordUnSave();
                             }
                         }
                         break;
                 }
                 break;
-
             }
-
         }
         return ret;
     }
@@ -419,7 +439,6 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             super.onDoubleTap(e);
-            Log.d("////", "onDoubleTap: 双击事件");
             if (mMediaRecorder != null) {
                 if (!isZoomIn) {
                     setZoom(20);

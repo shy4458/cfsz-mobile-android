@@ -1,19 +1,24 @@
 package com.sx.cfsz.cfsz.ui.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.VideoView;
 
+import com.github.mikephil.charting.utils.Utils;
 import com.sx.cfsz.R;
 import com.sx.cfsz.baseframework.base.AppConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.JZVideoPlayerStandard;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 
 /***       Author  shy
  *         Time   2018/5/8 0008    10:09      */
@@ -46,9 +51,10 @@ public class YwcSPLVAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = LayoutInflater.from(context).inflate(R.layout.lv_item_ywc_sp, parent, false);
-        JZVideoPlayerStandard jzVideoPlayerStandard = view.findViewById(R.id.videoplayer);
         String url = AppConfig.IP + AppConfig.DQSP + spList.get(position);
-        jzVideoPlayerStandard.setUp(url,JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL,"");
+
+        JZVideoPlayerStandard video = view.findViewById(R.id.videoplayer);
+        video.setUp(url, JZVideoPlayer.SCREEN_WINDOW_LIST,"");
 
         return view;
     }

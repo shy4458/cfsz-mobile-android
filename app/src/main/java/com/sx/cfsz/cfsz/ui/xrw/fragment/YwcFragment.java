@@ -133,20 +133,19 @@ public class YwcFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), YwcDetailsActivity.class);
-                String oldName = ywcListRows.get(position).getOld_name();
-                if (oldName != null) {
-                    intent.putExtra("oldName", oldName);
+                if (ywcAllListRows.get(position).getOld_name() != null) {
+                    intent.putExtra("oldName", ywcAllListRows.get(position).getOld_name());
                 }
-                intent.putExtra("Task_num", ywcListRows.get(position).getTask_num());
-                intent.putExtra("Task_address", ywcListRows.get(position).getTask_address());
-                intent.putExtra("Plan_time_start", ywcListRows.get(position).getPlan_time_start());
-                intent.putExtra("Plan_time_end", ywcListRows.get(position).getPlan_time_end());
-                intent.putExtra("Task_content", ywcListRows.get(position).getTask_content());
-                intent.putExtra("Task_id", ywcListRows.get(position).getTask_id());
-                intent.putExtra("Task_lat", ywcListRows.get(position).getTask_lat());
-                intent.putExtra("Task_lng", ywcListRows.get(position).getTask_lng());
-                intent.putExtra("Red_sign", ywcListRows.get(position).getRed_sign());
-                intent.putExtra("Task_sfbq", ywcListRows.get(position).getTask_sfbq());
+                intent.putExtra("Task_num", ywcAllListRows.get(position).getTask_num());
+                intent.putExtra("Task_address", ywcAllListRows.get(position).getTask_address());
+                intent.putExtra("Plan_time_start", ywcAllListRows.get(position).getPlan_time_start());
+                intent.putExtra("Plan_time_end", ywcAllListRows.get(position).getPlan_time_end());
+                intent.putExtra("Task_content", ywcAllListRows.get(position).getTask_content());
+                intent.putExtra("Task_id", ywcAllListRows.get(position).getTask_id());
+                intent.putExtra("Task_lat", ywcAllListRows.get(position).getTask_lat());
+                intent.putExtra("Task_lng", ywcAllListRows.get(position).getTask_lng());
+                intent.putExtra("Red_sign", ywcAllListRows.get(position).getRed_sign());
+                intent.putExtra("Task_sfbq", ywcAllListRows.get(position).getTask_sfbq());
                 intent.putExtra("Sealup_time_start",ywcAllListRows.get(position).getSealup_time_start());
                 intent.putExtra("Sealup_time_end",ywcAllListRows.get(position).getSealup_time_end());
                 intent.putExtra("Feedback_msg",ywcAllListRows.get(position).getFeedback_msg());

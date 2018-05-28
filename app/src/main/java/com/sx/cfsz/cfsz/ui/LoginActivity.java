@@ -114,12 +114,12 @@ public class LoginActivity extends AppCompatActivity {
                 return (event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
             }
         });
-        etPwd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                return (event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
-            }
-        });
+//        etPwd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                return (event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
+//            }
+//        });
 //        etName.setHorizontallyScrolling(true);
         bLogin.setOnClickListener(new View.OnClickListener() {
             @Override
