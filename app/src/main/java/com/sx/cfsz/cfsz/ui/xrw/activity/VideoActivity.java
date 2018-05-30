@@ -18,7 +18,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sx.cfsz.R;
 import com.sx.cfsz.baseframework.base.BaseApplication;

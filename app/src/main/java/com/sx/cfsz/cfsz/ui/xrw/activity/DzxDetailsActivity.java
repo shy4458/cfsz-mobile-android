@@ -7,12 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,8 +21,6 @@ import com.sx.cfsz.cfsz.dagger.component.DaggerDzxDetailsComponent;
 import com.sx.cfsz.cfsz.dagger.module.DzxDetailsModule;
 import com.sx.cfsz.cfsz.model.SubmitModel;
 import com.sx.cfsz.cfsz.presenter.DzxDetailsPresenter;
-import com.sx.cfsz.cfsz.ui.xrw.fragment.DzxFragment;
-import com.sx.cfsz.cfsz.ui.xrw.fragment.XrwFragment;
 
 import java.io.File;
 
@@ -40,6 +34,7 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
     @Inject
     DzxDetailsPresenter presenter;
     private static final int SUBMIT = 100;
+    private static final int SUCCRED = 1000;
 
     private ImageView ivBack;
     private TextView tvImplement;
@@ -57,7 +52,6 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
-
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -69,9 +63,12 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
                     intent.putExtra("state","20");
                     DzxDetailsActivity.this.setResult(RESULT_OK,intent);
                     finish();
+                    break;
+                case SUCCRED:
+                    String str = (String) msg.obj;
+
 
                     break;
-
                 default:
                     break;
             }
@@ -87,7 +84,6 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
         DaggerDzxDetailsComponent.builder().dzxDetailsModule(new DzxDetailsModule(this)).build().in(this);
 
         initView();
-
         Intent intent = getIntent();
         String task_num = intent.getStringExtra("Task_num");
         task_address = intent.getStringExtra("Task_address");
@@ -128,13 +124,18 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
         ivBack.setOnClickListener(this);
         tvImplement.setOnClickListener(this);
         ivNavige.setOnClickListener(this);
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_dzx_back:
+                if ("1".equals(red_sign)) {
+                    Intent intent = new Intent();
+                    intent.putExtra("state", "20");
+                    DzxDetailsActivity.this.setResult(RESULT_OK, intent);
+                    finish();
+                }
                 finish();
                 break;
             case R.id.tv_dzx_implement:
@@ -159,6 +160,14 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
         mHandler.sendMessage(msg);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+        switch (requestCode) {
+
+        }
+    }
+
+
     /**
      * 启动高德App进行导航
      * <h3>Version</h3> 1.0
@@ -167,7 +176,6 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
      * <h3>CreateAuthor</h3>
      * <h3>UpdateAuthor</h3>
      * <h3>UpdateInfo</h3> (此处输入修改内容,若无修改可不写.)
-     *
      * @param sourceApplication 必填 第三方调用应用名称。如 amap
      * @param poiname           非必填 POI 名称
      * @param lat               必填 纬度
@@ -205,9 +213,29 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
     public static boolean isInstallByRead(String packageName) {
         return new File("/data/data/" + packageName).exists();
     }
+
     @Override
     protected void onDestroy() {
         HttpUtils.cancleAllCall(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if ("1".equals(red_sign)) {
+            Intent intent = new Intent();
+            intent.putExtra("state", "20");
+            DzxDetailsActivity.this.setResult(RESULT_OK, intent);
+            finish();
+        }else {
+            super.onBackPressed();
+        }
+    }
+
+    public void successRed(String str) {
+        Message msg = Message.obtain();
+        msg.what = SUCCRED;
+        msg.obj = str;
+        mHandler.sendMessage(msg);
     }
 }

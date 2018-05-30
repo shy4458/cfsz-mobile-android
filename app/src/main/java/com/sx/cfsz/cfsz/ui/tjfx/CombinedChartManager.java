@@ -1,7 +1,5 @@
 package com.sx.cfsz.cfsz.ui.tjfx;
 
-import android.graphics.Color;
-
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;

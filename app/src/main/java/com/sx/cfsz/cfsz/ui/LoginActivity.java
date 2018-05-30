@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -21,14 +20,7 @@ import com.sx.cfsz.baseframework.util.UIUtils;
 import com.sx.cfsz.cfsz.dagger.component.DaggerLoginComponent;
 import com.sx.cfsz.cfsz.dagger.module.LoginActivityModule;
 import com.sx.cfsz.cfsz.model.LoginModel;
-import com.sx.cfsz.cfsz.model.RwModel;
 import com.sx.cfsz.cfsz.presenter.LoginPresenter;
-import com.sx.cfsz.cfsz.ui.adapter.ZxzLvAdapter;
-import com.sx.cfsz.cfsz.ui.xrw.fragment.ZxzFragment;
-import com.tencent.android.tpush.XGIOperateCallback;
-import com.tencent.android.tpush.XGPushClickedResult;
-import com.tencent.android.tpush.XGPushConfig;
-import com.tencent.android.tpush.XGPushManager;
 
 import javax.inject.Inject;
 
@@ -74,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
                                 BaseApplication.set("userId", loginModel.getData().getUserId());
                                 BaseApplication.set("userName", loginModel.getData().getUserName());
+                                BaseApplication.set("UserHeadpic",loginModel.getData().getUserHeadpic());
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.putExtra("userPost", loginModel.getData().getUserPost());
                                 startActivity(intent);

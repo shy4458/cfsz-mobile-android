@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.sx.cfsz.R;
-import com.sx.cfsz.baseframework.base.AppConfig;
 
 import java.util.ArrayList;
 import java.util.List;

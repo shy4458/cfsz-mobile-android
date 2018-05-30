@@ -1,7 +1,6 @@
 package com.sx.cfsz.cfsz.presenter;
 
 import android.text.Editable;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.sx.cfsz.baseframework.base.AppConfig;
@@ -11,13 +10,10 @@ import com.sx.cfsz.baseframework.http.HttpUtils;
 import com.sx.cfsz.baseframework.http.OnRequestResult;
 import com.sx.cfsz.cfsz.model.ZpFeedModel;
 import com.sx.cfsz.cfsz.ui.xrw.activity.ZxzDetailsActivity;
-import com.sx.cfsz.cfsz.ui.xrw.util.VideoCompressListener;
-import com.sx.cfsz.cfsz.ui.xrw.util.VideoCompressor;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import okhttp3.Response;
 

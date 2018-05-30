@@ -21,7 +21,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.sx.cfsz.R;
+import com.sx.cfsz.baseframework.base.AppConfig;
 import com.sx.cfsz.baseframework.base.BaseApplication;
 import com.sx.cfsz.baseframework.http.HttpUtils;
 import com.sx.cfsz.cfsz.dagger.component.DaggerMainActivityComponent;
@@ -35,11 +37,8 @@ import com.sx.cfsz.cfsz.ui.xrw.activity.SearchActivity;
 import com.sx.cfsz.cfsz.ui.xrw.activity.UserActivity;
 import com.sx.cfsz.cfsz.ui.xrw.fragment.XrwFragment;
 import com.tencent.android.tpush.XGIOperateCallback;
-import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
-
-import java.security.Guard;
 
 import javax.inject.Inject;
 
@@ -105,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setTabSelection(0);
         }
         initXg();
+        Glide.with(this).load(AppConfig.IP + AppConfig.PIC + BaseApplication.get("UserHeadpic","")).into(civHead);
     }
 
     private void initXg() {
@@ -124,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.d("TPush", "注册失败，错误码：" + errCode + ",错误信息：" + msg);
                     }
                 });
-
 
     }
 
@@ -168,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     transaction.add(R.id.mainF, xrwFragment, "xrwFragment");
                 } else {
                     transaction.show(xrwFragment);
-//                    xrwFragment.refrsh();
                 }
                 break;
 

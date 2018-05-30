@@ -53,7 +53,7 @@ public class DzxDetailsPresenter  {
                     if (response != null && response.isSuccessful()){
                         try {
                             String str = response.body().string();
-
+                            activity.successRed(str);
 
                         } catch (IOException e1) {
                             e1.printStackTrace();

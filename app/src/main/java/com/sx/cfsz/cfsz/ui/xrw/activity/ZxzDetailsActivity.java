@@ -2,21 +2,20 @@ package com.sx.cfsz.cfsz.ui.xrw.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -32,31 +31,27 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.sx.cfsz.BuildConfig;
 import com.sx.cfsz.R;
 import com.sx.cfsz.baseframework.base.AppConfig;
 import com.sx.cfsz.baseframework.base.BaseApplication;
-import com.sx.cfsz.baseframework.http.FileInfo;
-import com.sx.cfsz.baseframework.http.FileType;
 import com.sx.cfsz.baseframework.http.HttpUtils;
-import com.sx.cfsz.baseframework.http.OnRequestResult;
+import com.sx.cfsz.baseframework.util.JumpPermissionManagement;
 import com.sx.cfsz.baseframework.util.UIUtils;
 import com.sx.cfsz.cfsz.dagger.component.DaggerZxzDetailsComponent;
 import com.sx.cfsz.cfsz.dagger.module.ZxzDetailsModule;
 import com.sx.cfsz.cfsz.model.ZpFeedModel;
 import com.sx.cfsz.cfsz.presenter.ZxzDetailsPresenter;
-import com.sx.cfsz.cfsz.ui.MainActivity;
 import com.sx.cfsz.cfsz.ui.adapter.GridViewAdapter;
 import com.sx.cfsz.cfsz.ui.adapter.LvMp4Adapter;
 import com.sx.cfsz.cfsz.ui.myView.CustomDialog;
 import com.sx.cfsz.cfsz.ui.xrw.PictureSelectorConfig;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -65,21 +60,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import cn.jzvd.JZVideoPlayer;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-
-import static android.Manifest.permission.RECORD_AUDIO;
 
 /***       Author  shy              反馈
  *         Time   2018/4/12 0012    14:41      */
 
-public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClickListener,
+        AdapterView.OnItemClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
     @Inject
     ZxzDetailsPresenter presenter;
@@ -115,6 +101,7 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
     private ImageView ivDcQssj;
     private ImageView ivDcJzsj;
     private String Task_sfbq;
+    private boolean power;
 
 
     private static final int ZP = 500;
@@ -238,17 +225,7 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         lvMp4Adapter = new LvMp4Adapter(ZxzDetailsActivity.this, mp4List);
         lvMp4.setAdapter(lvMp4Adapter);
 
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(ZxzDetailsActivity.this,
-                        new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO},
-                        1);
-
-            }
-        }
+        initPower();
     }
 
     private void initSpi() {
@@ -292,8 +269,18 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
                 break;
 
             case R.id.ivAddMp4:
-                Intent intent = new Intent(ZxzDetailsActivity.this, VideoActivity.class);
-                startActivityForResult(intent, 10);
+                //TODO 视频权限
+                if (ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
+                        ) {
+                    UIUtils.showToast(ZxzDetailsActivity.this, "请添加访问权限");
+                    JumpPermissionManagement.GoToSetting( ZxzDetailsActivity.this);
+
+                } else {
+                    Intent intent = new Intent(ZxzDetailsActivity.this, VideoActivity.class);
+                    startActivityForResult(intent, 10);
+                }
                 break;
             case R.id.iv_zxz_daohang:
                 //调起高德导航
@@ -319,31 +306,35 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         ivAddMp4.setVisibility(View.VISIBLE);
     }
 
-    //控制界面的显示与隐藏
-    public void setGong(int zxstate) {
-        if (zxstate == AppConfig.STETADZX) {
-            llGongVisi.setVisibility(View.GONE);
-        } else if (zxstate == AppConfig.STETAZXZ) {
-            llGongVisi.setVisibility(View.VISIBLE);
-        } else if (zxstate == AppConfig.STETAYWC) {
-            llGongVisi.setVisibility(View.VISIBLE);
-        }
-    }
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (position == parent.getChildCount() - 1) {
-            //如果“增加按钮形状的”图片的位置是最后一张，且添加了的图片的数量不超过8张，才能点击
-            if (mPicList.size() == AppConfig.MAX_SELECT_PIC_NUM) {
-                //最多添加8张图片
-                viewPluImg(position);
-            } else {
-                //添加凭证图片
-                selectPic(AppConfig.MAX_SELECT_PIC_NUM - mPicList.size());
-            }
+        //TODO 添加照片权限
+        if (ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
+                ) {
+            UIUtils.showToast(ZxzDetailsActivity.this, "请添加访问权限");
+            JumpPermissionManagement.GoToSetting( ZxzDetailsActivity.this);
+
+//            Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+//            intent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity");
+//            intent.putExtra("extra_pkgname", ZxzDetailsActivity.this.getPackageName());
+//            startActivity(intent);
 
         } else {
-            viewPluImg(position);
+            if (position == parent.getChildCount() - 1) {
+                //如果“增加按钮形状的”图片的位置是最后一张，且添加了的图片的数量不超过8张，才能点击
+                if (mPicList.size() == AppConfig.MAX_SELECT_PIC_NUM) {
+                    //最多添加8张图片
+                    viewPluImg(position);
+                } else {
+                    //添加凭证图片
+                    selectPic(AppConfig.MAX_SELECT_PIC_NUM - mPicList.size());
+                }
+
+            } else {
+                viewPluImg(position);
+            }
         }
     }
 
@@ -367,13 +358,7 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case PictureConfig.CHOOSE_REQUEST:
-                    // 图片选择结果回调
                     refreshAdapter(PictureSelector.obtainMultipleResult(data));
-                    // 例如 LocalMedia 里面返回三种path
-                    // 1.media.getPath(); 为原图path
-                    // 2.media.getCutPath();为裁剪后path，需判断media.isCut();是否为true
-                    // 3.media.getCompressPath();为压缩后path，需判断media.isCompressed();是否为true
-                    // 如果裁剪并压缩了，以取压缩路径为准，因为是先裁剪后压缩的
                     break;
             }
         }
@@ -394,7 +379,6 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
             if (mp4List.size() >= 2) {
                 ivAddMp4.setVisibility(View.GONE);
             }
-
         }
     }
 
@@ -445,6 +429,26 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         return new File("/data/data/" + packageName).exists();
     }
 
+    private void initPower() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(ZxzDetailsActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, 1);
+
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                //权限回调
+                break;
+            }
+        }
+    }
 
     //起始时间dialog
     private void showDcDialogqs() {
@@ -479,7 +483,6 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
             }
         });
         qsDialog.show();
-
     }
 
     //截至时间dialog

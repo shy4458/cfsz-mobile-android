@@ -38,9 +38,7 @@ public class DzxFragmentPresenter {
         activity = (MainActivity) fragment.getActivity();
         this.state =state;
         if (state == 1) {
-
             activity.showDialog(fragment.getActivity());
-
         }
 
         String url = AppConfig.IP + AppConfig.DZX + AppConfig.PAGE + page + AppConfig.ROWS + rows;

@@ -21,7 +21,7 @@ public class AppConfig {
     public static final int STETAZXZ = 2;
     public static final int STETAYWC = 3;
 
-    public static final int ROWSNUMBER = 10;
+    public static final int ROWSNUMBER = 20;
 
     //ip
     public static final String IP = "http://192.168.120.115:9000/";
@@ -35,6 +35,8 @@ public class AppConfig {
     public static final String NAME = "userName=";
     //密码
     public static final String PWD = "&userPwd=";
+    //头像 "http://192.168.120.115:9000/user/IoReadImage?imgName="
+    public static final String PIC = "user/IoReadImage?imgName=";
     //userId
     public static final String USERID = "?user_id=";
     //每个状态下的总数  http://192.168.120.115:9000/task/Appidsjl

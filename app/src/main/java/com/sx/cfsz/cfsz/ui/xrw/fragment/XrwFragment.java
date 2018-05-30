@@ -8,10 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +17,12 @@ import android.widget.TextView;
 
 import com.sx.cfsz.R;
 import com.sx.cfsz.baseframework.base.AppConfig;
-import com.sx.cfsz.baseframework.http.HttpUtils;
 import com.sx.cfsz.cfsz.dagger.component.DaggerXrwFragmentComponent;
 import com.sx.cfsz.cfsz.dagger.module.XrwFragmentModule;
 import com.sx.cfsz.cfsz.model.RwNumberModel;
 import com.sx.cfsz.cfsz.presenter.XrwFragmentPresenter;
 import com.sx.cfsz.cfsz.ui.MainActivity;
 import com.sx.cfsz.cfsz.ui.adapter.VpAdapter;
-import com.sx.cfsz.cfsz.ui.tjfx.TjfxFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +61,7 @@ public class XrwFragment extends Fragment implements View.OnClickListener, ViewP
             }
         }
     };
+
     private TextView tvDzx;
     private TextView tvZxz;
     private TextView tvYwc;
@@ -265,4 +261,5 @@ public class XrwFragment extends Fragment implements View.OnClickListener, ViewP
         dzxFragment.dzxAllListRows.clear();
         dzxFragment.presenter.getData(1,AppConfig.ROWSNUMBER,1);
     }
+
 }

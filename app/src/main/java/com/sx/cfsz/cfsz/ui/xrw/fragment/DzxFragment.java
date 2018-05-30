@@ -1,7 +1,6 @@
 package com.sx.cfsz.cfsz.ui.xrw.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,24 +8,20 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sx.cfsz.R;
 import com.sx.cfsz.baseframework.base.AppConfig;
-import com.sx.cfsz.baseframework.base.BaseApplication;
 import com.sx.cfsz.baseframework.util.UIUtils;
 import com.sx.cfsz.cfsz.dagger.component.DaggerDzxFragmentComponent;
 import com.sx.cfsz.cfsz.dagger.module.DzxFragmentModule;
@@ -35,7 +30,6 @@ import com.sx.cfsz.cfsz.model.SubmitModel;
 import com.sx.cfsz.cfsz.presenter.DzxFragmentPresenter;
 import com.sx.cfsz.cfsz.ui.MainActivity;
 import com.sx.cfsz.cfsz.ui.adapter.DzxLvAdapter;
-import com.sx.cfsz.cfsz.ui.myView.CustomDialog;
 import com.sx.cfsz.cfsz.ui.xrw.activity.DzxDetailsActivity;
 
 import java.util.ArrayList;
@@ -50,7 +44,7 @@ import static android.app.Activity.RESULT_OK;
 /***       Author  shy
  *         Time   2018/4/19 0019    10:03      */
 
-public class DzxFragment extends Fragment {
+public class DzxFragment extends Fragment{
 
     @Inject
     DzxFragmentPresenter presenter;
@@ -80,7 +74,7 @@ public class DzxFragment extends Fragment {
                     dzxLvAdapter = new DzxLvAdapter(DzxFragment.this.getActivity(), dzxAllListRows);
                     lvDzx.setAdapter(dzxLvAdapter);
                     if (page != 1){
-                        lvDzx.setSelection(page*10-12);
+                        lvDzx.setSelection(page*20-22);
                     }
                     presenter.dialogDismis();
                     if (dzxAllListRows.size() < totalCount){
@@ -88,7 +82,8 @@ public class DzxFragment extends Fragment {
                     }else {
                         dzxRefresh.setEnableLoadMore(false);
                     }
-
+                    dzxRefresh.finishRefresh();//结束刷新
+                    dzxRefresh.finishLoadMore();//结束加载
                     break;
                 case ALLSUBMIT:
                     SubmitModel submitModel = (SubmitModel) msg.obj;
@@ -99,7 +94,6 @@ public class DzxFragment extends Fragment {
                     if (dzxAllListRows != null) {
                         dzxAllListRows.clear();
                     }
-
                     presenter.getData(1, AppConfig.ROWSNUMBER,1);
                 default:
                     break;
@@ -124,7 +118,7 @@ public class DzxFragment extends Fragment {
          * 但首次不调用 因此使用本标识 state
          */
         if (state == 0){
-            initData();
+            initData(1);
             state = 1;
         }
         initListener();
@@ -135,12 +129,13 @@ public class DzxFragment extends Fragment {
         mainActivity = (MainActivity) getActivity();
         lvDzx = view.findViewById(R.id.lv_dzx);
         dzxRefresh = view.findViewById(R.id.dzx_srlRefresh);
+        dzxRefresh.setHeaderHeight(60);
+        dzxRefresh.setRefreshHeader(new ClassicsHeader(getActivity()));
         dzxRefresh.setRefreshFooter(new BallPulseFooter(getActivity()).setAnimatingColor(getResources().getColor(R.color.colorTitle)));
     }
 
-    private void initData() {
-
-        presenter.getData(1, AppConfig.ROWSNUMBER,1);
+    public void initData(int s) {
+        presenter.getData(1, AppConfig.ROWSNUMBER,s);
     }
 
     private void initListener() {
@@ -150,17 +145,14 @@ public class DzxFragment extends Fragment {
                 dzxListRows.clear();
                 dzxAllListRows.clear();
                 page = 1;
-                dzxRefresh.finishRefresh(1000);//刷新动画时间
                 presenter.getData(1, AppConfig.ROWSNUMBER,0);
             }
         });
         dzxRefresh.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                dzxRefresh.finishLoadMore(1000);//上拉加载动画时间
                 page = page + 1;
                 presenter.getData(page, AppConfig.ROWSNUMBER,0);
-
             }
         });
         //列表长按
@@ -193,7 +185,6 @@ public class DzxFragment extends Fragment {
                 intent.putExtra("Task_lat", dzxAllListRows.get(position).getTask_lat());
                 intent.putExtra("Task_lng", dzxAllListRows.get(position).getTask_lng());
                 intent.putExtra("Red_sign", dzxAllListRows.get(position).getRed_sign());
-
                 startActivityForResult(intent,20);
             }
         });
@@ -214,6 +205,7 @@ public class DzxFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //单个执行后返回到本界面并刷新
+        //去掉红点接口同理
         if (requestCode == 20 && resultCode == RESULT_OK) {
             Bundle bundle = data.getExtras();
             String state = bundle.getString("state");
@@ -252,7 +244,6 @@ public class DzxFragment extends Fragment {
             allRed = value + "," + allRed;
         }
         presenter.submitAll(allTastId.substring(0, allTastId.length() - 1), allRed.substring(0, allRed.length() - 1));
-
     }
 
     //刷新开关
@@ -266,10 +257,5 @@ public class DzxFragment extends Fragment {
         msg.what = ALLSUBMIT;
         msg.obj = submitModel;
         mHandler.sendMessage(msg);
-    }
-    //执行后刷新本界面
-    public void refresh(){
-
-        presenter.getData(1, AppConfig.ROWSNUMBER,1);
     }
 }

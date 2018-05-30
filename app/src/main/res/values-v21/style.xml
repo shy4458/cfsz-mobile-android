@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
-        <item name="android:colorPrimary">@color/colorTitle</item>
-        <item name="android:colorPrimaryDark">@color/colorTitle</item>
-        <item name="android:colorAccent">@color/colorTitle</item>
-    </style>
-
     <style name="CustomDialog" parent="Theme.AppCompat.Dialog">
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>

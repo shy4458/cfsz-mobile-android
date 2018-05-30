@@ -7,22 +7,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.luck.picture.lib.PictureSelector;
-import com.luck.picture.lib.config.PictureConfig;
-import com.luck.picture.lib.entity.LocalMedia;
 import com.sx.cfsz.R;
 import com.sx.cfsz.baseframework.base.AppConfig;
 import com.sx.cfsz.baseframework.base.BaseApplication;
@@ -31,15 +23,11 @@ import com.sx.cfsz.baseframework.util.UIUtils;
 import com.sx.cfsz.cfsz.dagger.component.DaggerYwcDetaileComponent;
 import com.sx.cfsz.cfsz.dagger.module.YwcDetailsModule;
 import com.sx.cfsz.cfsz.presenter.YwcDetailsPresenter;
-import com.sx.cfsz.cfsz.ui.adapter.GridViewAdapter;
-import com.sx.cfsz.cfsz.ui.adapter.LvMp4Adapter;
 import com.sx.cfsz.cfsz.ui.adapter.YwcGVAdapter;
 import com.sx.cfsz.cfsz.ui.adapter.YwcSPLVAdapter;
-import com.sx.cfsz.cfsz.ui.xrw.PictureSelectorConfig;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 

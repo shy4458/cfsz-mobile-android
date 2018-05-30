@@ -1,7 +1,6 @@
 package com.sx.cfsz.cfsz.ui.xrw.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,7 +8,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +17,7 @@ import android.widget.ListView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sx.cfsz.R;
@@ -51,7 +50,6 @@ public class YwcFragment extends Fragment {
     public List<RwModel.DataBean.RecordsBean> ywcListRows = new ArrayList<>();  //每次请求的新数据
     public List<RwModel.DataBean.RecordsBean> ywcAllListRows = new ArrayList<>();   //界面上的所有数据
     private YwcLvAdapter ywcLvAdapter;
-    private ProgressDialog progressDialog;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -66,7 +64,7 @@ public class YwcFragment extends Fragment {
                     ywcLvAdapter = new YwcLvAdapter(YwcFragment.this.getActivity(), ywcAllListRows);
                     lvYwc.setAdapter(ywcLvAdapter);
                     if (page != 1){
-                        lvYwc.setSelection(page*10-12);
+                        lvYwc.setSelection(page*20-22);
                     }
                     persenter.dialogDismis(1);
                     if (ywcAllListRows.size() < totalCount){
@@ -74,6 +72,9 @@ public class YwcFragment extends Fragment {
                     }else {
                         ywcRefresh.setEnableLoadMore(false);
                     }
+
+                    ywcRefresh.finishRefresh();//结束刷新
+                    ywcRefresh.finishLoadMore();//结束加载
                     break;
 
                 default:
@@ -101,6 +102,8 @@ public class YwcFragment extends Fragment {
     private void initView(View view) {
         ywcRefresh = view.findViewById(R.id.ywc_srlRefresh);
         lvYwc = view.findViewById(R.id.lv_ywc);
+        ywcRefresh.setHeaderHeight(60);
+        ywcRefresh.setRefreshHeader(new ClassicsHeader(getActivity()));
         ywcRefresh.setRefreshFooter(new BallPulseFooter(getActivity()).setAnimatingColor(getResources().getColor(R.color.colorTitle)));
     }
 
@@ -114,7 +117,6 @@ public class YwcFragment extends Fragment {
                 ywcListRows.clear();
                 ywcAllListRows.clear();
                 page = 1;
-                ywcRefresh.finishRefresh(1000);//刷新动画时间
                 persenter.getData(1, AppConfig.ROWSNUMBER,0);
             }
         });
@@ -122,7 +124,6 @@ public class YwcFragment extends Fragment {
         ywcRefresh.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                ywcRefresh.finishLoadMore(1000);//上拉加载动画时间
                 page = page + 1;
                 persenter.getData(page, AppConfig.ROWSNUMBER,0);
 

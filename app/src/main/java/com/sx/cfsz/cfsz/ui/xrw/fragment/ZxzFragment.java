@@ -1,7 +1,6 @@
 package com.sx.cfsz.cfsz.ui.xrw.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,7 +8,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +17,7 @@ import android.widget.ListView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sx.cfsz.R;
@@ -69,7 +68,7 @@ public class ZxzFragment extends Fragment {
                     rwLvAdapter = new ZxzLvAdapter(ZxzFragment.this.getActivity(), zxzAllListRows);
                     lvZxz.setAdapter(rwLvAdapter);
                     if (page != 1){
-                        lvZxz.setSelection(page*10-12);
+                        lvZxz.setSelection(page*20-22);
                     }
                     presenter.dialogDismis();
                     if (zxzAllListRows.size() < totalCount){
@@ -77,6 +76,9 @@ public class ZxzFragment extends Fragment {
                     }else {
                         zxzRefresh.setEnableLoadMore(false);
                     }
+
+                    zxzRefresh.finishRefresh();//结束刷新
+                    zxzRefresh.finishLoadMore();//结束加载
                     break;
 
                 default:
@@ -117,6 +119,8 @@ public class ZxzFragment extends Fragment {
     private void initView(View view) {
         lvZxz = view.findViewById(R.id.lv_zxz);
         zxzRefresh = view.findViewById(R.id.zxz_srlRefresh);
+        zxzRefresh.setHeaderHeight(60);
+        zxzRefresh.setRefreshHeader(new ClassicsHeader(getActivity()));
         zxzRefresh.setRefreshFooter(new BallPulseFooter(getActivity()).setAnimatingColor(getResources().getColor(R.color.colorTitle)));
         zxzRefresh.setFooterTriggerRate(0);//触发加载距离 与 FooterHeight 的比率1.0.4
     }
@@ -125,7 +129,6 @@ public class ZxzFragment extends Fragment {
         zxzRefresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                zxzRefresh.finishRefresh(1000);//刷新动画时间
                 zxzListRows.clear();
                 zxzAllListRows.clear();
                 page = 1;
@@ -135,7 +138,6 @@ public class ZxzFragment extends Fragment {
         zxzRefresh.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                zxzRefresh.finishLoadMore(1000);//上拉加载动画时间
                 page = page + 1;
                 presenter.getData(page, AppConfig.ROWSNUMBER,0);
             }

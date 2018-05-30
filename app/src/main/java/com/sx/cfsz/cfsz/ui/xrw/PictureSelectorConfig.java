@@ -6,8 +6,6 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 
-import top.zibin.luban.Luban;
-
 
 public class PictureSelectorConfig {
 

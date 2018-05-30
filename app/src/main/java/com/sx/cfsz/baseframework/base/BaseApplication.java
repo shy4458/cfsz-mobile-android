@@ -83,6 +83,7 @@ public class BaseApplication extends Application {
         for (Activity activity : list) {
             activity.finish();
         }
+
     }
 
 
