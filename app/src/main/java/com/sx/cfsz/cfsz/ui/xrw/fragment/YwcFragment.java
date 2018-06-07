@@ -153,6 +153,7 @@ public class YwcFragment extends Fragment {
                 intent.putExtra("Feedback_pic",ywcAllListRows.get(position).getFeedback_pic());
                 intent.putExtra("Feedback_video",ywcAllListRows.get(position).getFeedback_video());
                 intent.putExtra("Task_type",ywcAllListRows.get(position).getTask_type());
+                intent.putExtra("Task_result_message",ywcAllListRows.get(position).getTask_result_message());
                 startActivity(intent);
             }
         });

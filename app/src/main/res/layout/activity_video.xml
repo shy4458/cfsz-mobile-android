@@ -10,7 +10,6 @@
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="150dp"
         android:elevation="1dp"
-        android:text="双击放大"
         android:textColor="#FFFFFF"/>
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +19,7 @@
             android:id="@+id/surface_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"/>
+            android:layout_weight="12"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"

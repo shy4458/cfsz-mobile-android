@@ -3,6 +3,7 @@ package com.sx.cfsz.cfsz.ui.xrw.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,12 +18,20 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.SpannedString;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -31,6 +40,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -46,6 +56,7 @@ import com.sx.cfsz.cfsz.dagger.component.DaggerZxzDetailsComponent;
 import com.sx.cfsz.cfsz.dagger.module.ZxzDetailsModule;
 import com.sx.cfsz.cfsz.model.ZpFeedModel;
 import com.sx.cfsz.cfsz.presenter.ZxzDetailsPresenter;
+import com.sx.cfsz.cfsz.ui.MainActivity;
 import com.sx.cfsz.cfsz.ui.adapter.GridViewAdapter;
 import com.sx.cfsz.cfsz.ui.adapter.LvMp4Adapter;
 import com.sx.cfsz.cfsz.ui.myView.CustomDialog;
@@ -54,6 +65,7 @@ import com.sx.cfsz.cfsz.ui.xrw.PictureSelectorConfig;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -71,7 +83,7 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
     ZxzDetailsPresenter presenter;
 
     private EditText etMsxx;
-    private ImageView ivBack;
+    private LinearLayout llBack;
     private TextView tvBack;
     private GridView gridView;
     private ArrayList<String> mPicList = new ArrayList<>(); //上传的图片凭证的数据源
@@ -82,7 +94,6 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
     private ListView lvMp4;
     private ImageView ivAddMp4;
     private LvMp4Adapter lvMp4Adapter;
-    private String zxstate;
     private LinearLayout llGongVisi;
     private TextView tvZpr;
     private TextView tvAjh;
@@ -95,35 +106,41 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
     private String task_lng;
     private String result;
 
-    private Spinner czlxSpinner;
+
     private TextView tvDcQssj;
     private TextView tvDcJzsj;
-    private ImageView ivDcQssj;
-    private ImageView ivDcJzsj;
+    private LinearLayout llDcQssj;
+    private LinearLayout llDcJzsj;
     private String Task_sfbq;
-    private boolean power;
 
-
+    private static final int SUCCREDZXZ = 503;
     private static final int ZP = 500;
     private static final int SP = 501;
     private static final int CG = 502;
+
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
+                case SUCCREDZXZ:
+                    String str = (String) msg.obj;
+
+                    break;
                 case ZP:
                     ZpFeedModel zpmodel = (ZpFeedModel) msg.obj;
                     BaseApplication.set("zp", zpmodel.getData());
                     presenter.feedSp(mp4List);
+                    tvMsg.setText("(2/3)正在上传拍摄的视频");
                     break;
 
                 case SP:
                     ZpFeedModel spmodel = (ZpFeedModel) msg.obj;
                     BaseApplication.set("sp", spmodel.getData());
+                    tvMsg.setText("(3/3)正在上传整合信息");
                     presenter.feed(
-                            AppConfig.userId,
+                            BaseApplication.get("userId", ""),
                             task_id,
                             etMsxx.getText(),
                             BaseApplication.get("zp", ""),
@@ -135,11 +152,11 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
                     break;
 
                 case CG:
-                    customDialog.dismiss();
                     Intent intent = new Intent();
                     intent.putExtra("state", "30");
                     ZxzDetailsActivity.this.setResult(RESULT_OK, intent);
                     finish();
+                    feedDialog.dismiss();
                     UIUtils.showToast(ZxzDetailsActivity.this, "反馈成功");
                     break;
 
@@ -150,8 +167,12 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
     };
 
     private String task_id;
-    private String strSelecte;
-    private CustomDialog customDialog;
+    private String strSelecte = "";
+    private LinearLayout llCzlx;
+    private TextView tvCzlx;
+    private TextView tvMsg;
+    private Dialog feedDialog;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -171,6 +192,7 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         result = intent.getStringExtra("Result");
         Task_sfbq = intent.getStringExtra("Task_sfbq");
         task_id = intent.getStringExtra("Task_id");
+        String red_sign = intent.getStringExtra("Red_sign");
         if (oldName == null) {
             tvZpr.setText("未转派");
         } else {
@@ -183,16 +205,25 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         tvJzsj.setText(plan_time_end);
         tvRwnr.setText(task_content);
 
-        initSpi();
+        if ("1".equals(red_sign)) {
+            presenter.remoRed(task_id, red_sign);
+        }
 
+        initSpi();
     }
 
 
     private void initView() {
         BaseApplication.addList(this);
-        ivBack = findViewById(R.id.ivFeedbackBack);
+        llBack = findViewById(R.id.llFeedbackBack);
         tvBack = findViewById(R.id.tvFeedback);
         etMsxx = findViewById(R.id.etMsxx);
+        SpannableString ss = new SpannableString("请在这里输入反馈信息...");//定义hint的值
+        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(15, true);//设置字体大小 true表示单位是sp
+        ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        etMsxx.setHint(new SpannedString(ss));
+
+
         gridView = findViewById(R.id.gridView);
         lvMp4 = findViewById(R.id.lvMp4);
         ivAddMp4 = findViewById(R.id.ivAddMp4);
@@ -203,25 +234,27 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         tvQssj = findViewById(R.id.tv_zxz_qssj);
         tvJzsj = findViewById(R.id.tv_zxz_jzsj);
         tvRwnr = findViewById(R.id.tv_zxz_rwnr);
+        llCzlx = findViewById(R.id.ll_czlx);
         ivDaohang = findViewById(R.id.iv_zxz_daohang);
 
-        czlxSpinner = findViewById(R.id.spi);
+//        czlxSpinner = findViewById(R.id.spi);
         tvDcQssj = findViewById(R.id.tv_dcQssj);
         tvDcJzsj = findViewById(R.id.tv_dcJzsj);
-        ivDcQssj = findViewById(R.id.iv_dcQssj);
-        ivDcJzsj = findViewById(R.id.iv_dcJzsj);
+        llDcQssj = findViewById(R.id.ll_dcQssj);
+        llDcJzsj = findViewById(R.id.ll_dcJzsj);
+        tvCzlx = findViewById(R.id.tv_czlx);
 
-        ivBack.setOnClickListener(this);
+        llCzlx.setOnClickListener(this);
+        llBack.setOnClickListener(this);
         tvBack.setOnClickListener(this);
         ivAddMp4.setOnClickListener(this);
         ivDaohang.setOnClickListener(this);
-        ivDcJzsj.setOnClickListener(this);
-        ivDcQssj.setOnClickListener(this);
+        llDcJzsj.setOnClickListener(this);
+        llDcQssj.setOnClickListener(this);
 
         mGridViewAddImgAdapter = new GridViewAdapter(ZxzDetailsActivity.this, mPicList);
         gridView.setAdapter(mGridViewAddImgAdapter);
         gridView.setOnItemClickListener(this);
-
         lvMp4Adapter = new LvMp4Adapter(ZxzDetailsActivity.this, mp4List);
         lvMp4.setAdapter(lvMp4Adapter);
 
@@ -231,6 +264,7 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
     private void initSpi() {
         //        "(账户冻结,2);(轮候冻结,3);(财产不实,100);(办理失败,101)"
         String[] str = result.split(";");
+
         for (int i = 0; i < str.length; i++) {
             String[] split = str[i].substring(1, str[i].length() - 1).split(",");
             mapType.put(split[0], split[1]);
@@ -238,48 +272,60 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         for (String type : mapType.keySet()) {
             listType.add(type);
         }
-        ArrayAdapter<String> spiAdapter = new ArrayAdapter<>(ZxzDetailsActivity.this, android.R.layout.simple_spinner_item, listType);
 
-        czlxSpinner.setAdapter(spiAdapter);
-        //下拉框选中监听
-        czlxSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                strSelecte = mapType.get(listType.get(position));
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ivFeedbackBack:
+            case R.id.llFeedbackBack:
                 finish();
                 break;
             case R.id.tvFeedback:
-                customDialog = new CustomDialog(ZxzDetailsActivity.this, R.style.CustomDialog, false);
-                customDialog.show();
-                presenter.feedZp(mPicList);
+                if ("".equals(strSelecte)) {
+                    UIUtils.showToast(ZxzDetailsActivity.this, "请选择类型");
+                } else {
+                    //比较起止时间 截至时间>起始时间
+                    String qs = new String(tvDcQssj.getText() + "");
+                    String jz = new String(tvDcJzsj.getText() + "");
+                    if (!"".equals(qs)){
+                        //起始时间不为空
+                        if (!"".equals(jz)){
+                            //起始时间 和 截止时间 都为空时比较大小
+                            Long sQs = Long.valueOf(qs.replaceAll("-", ""));
+                            Long sJz = Long.valueOf(jz.replaceAll("-", ""));
+                            if (sQs < sJz) {
+                                UIUtils.showToast(ZxzDetailsActivity.this,etMsxx.getText().length() + "");
+                                feedDialog();
+                                presenter.feedZp(mPicList);
+                            }else {
+                                UIUtils.showToast(ZxzDetailsActivity.this,"结束时间应该大于开始时间,请重新选择");
+                            }
+                        }else {
+                            // 起始时间不为空  截至时间为空 不比较 直接提交
+                            feedDialog();
+                            presenter.feedZp(mPicList);
+                        }
+                    }else {
+                        //起始时间为空 不比较大小 直接提交
+                        feedDialog();
+                        presenter.feedZp(mPicList);
+                    }
+
+                }
                 break;
 
             case R.id.ivAddMp4:
                 //TODO 视频权限
-                if (ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
-                        ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                        ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
-                        ) {
-                    UIUtils.showToast(ZxzDetailsActivity.this, "请添加访问权限");
-                    JumpPermissionManagement.GoToSetting( ZxzDetailsActivity.this);
-
-                } else {
+                boolean camera = ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+                boolean write = ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+                boolean record = ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+                if (camera && write && record) {
                     Intent intent = new Intent(ZxzDetailsActivity.this, VideoActivity.class);
                     startActivityForResult(intent, 10);
+                } else {
+                    UIUtils.showToast(ZxzDetailsActivity.this, "请添加访问权限");
+                    JumpPermissionManagement.GoToSetting(ZxzDetailsActivity.this);
                 }
                 break;
             case R.id.iv_zxz_daohang:
@@ -291,12 +337,17 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
                 }
                 break;
 
-            case R.id.iv_dcQssj:
+            case R.id.ll_dcQssj:
                 showDcDialogqs();
 
                 break;
-            case R.id.iv_dcJzsj:
+            case R.id.ll_dcJzsj:
                 showDcDialogjz();
+                break;
+
+            case R.id.ll_czlx:
+                ShowSingleDialog(which);
+
                 break;
         }
     }
@@ -309,19 +360,10 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //TODO 添加照片权限
-        if (ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
-                ) {
-            UIUtils.showToast(ZxzDetailsActivity.this, "请添加访问权限");
-            JumpPermissionManagement.GoToSetting( ZxzDetailsActivity.this);
-
-//            Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
-//            intent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity");
-//            intent.putExtra("extra_pkgname", ZxzDetailsActivity.this.getPackageName());
-//            startActivity(intent);
-
-        } else {
+        boolean camera = ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+        boolean write = ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        boolean record = ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+        if (camera && write && record) {
             if (position == parent.getChildCount() - 1) {
                 //如果“增加按钮形状的”图片的位置是最后一张，且添加了的图片的数量不超过8张，才能点击
                 if (mPicList.size() == AppConfig.MAX_SELECT_PIC_NUM) {
@@ -335,6 +377,11 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
             } else {
                 viewPluImg(position);
             }
+
+        } else {
+            UIUtils.showToast(ZxzDetailsActivity.this, "请添加访问权限");
+            JumpPermissionManagement.GoToSetting(ZxzDetailsActivity.this);
+
         }
     }
 
@@ -369,7 +416,7 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
             mPicList.addAll(toDeletePicList);
             mGridViewAddImgAdapter.notifyDataSetChanged();
             int size = mPicList.size();
-            Log.d("删除后////", "" + size);
+
         }
         if (requestCode == 10 && resultCode == RESULT_OK) {
             Bundle bundle = data.getExtras();
@@ -393,7 +440,7 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
             }
         }
         int size = mPicList.size();
-        Log.d("添加后////", "" + size);
+
     }
 
     //查看大图
@@ -431,11 +478,11 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
 
     private void initPower() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &
+                    ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &
+                    ContextCompat.checkSelfPermission(ZxzDetailsActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
+                    ) {
                 ActivityCompat.requestPermissions(ZxzDetailsActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, 1);
-
             }
         }
     }
@@ -450,11 +497,15 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+
     //起始时间dialog
     private void showDcDialogqs() {
         Calendar cal = Calendar.getInstance();
         final DatePickerDialog qsDialog = new DatePickerDialog(this, null,
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        final Date date = new Date();
+        long time = date.getTime();
+        qsDialog.getDatePicker().setMinDate(time);
         //手动设置按钮
         qsDialog.setButton(DialogInterface.BUTTON_POSITIVE, "完成", new DialogInterface.OnClickListener() {
             @Override
@@ -471,8 +522,15 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
                 } else {
                     qsMonth = month + "";
                 }
+                String qsDay = "";
+                if (day < 10) {
+                    qsDay = "0" + day;
+                } else {
+                    qsDay = day + "";
+                }
 
-                tvDcQssj.setText(year + "-" + qsMonth + "-" + day);
+
+                tvDcQssj.setText(year + "-" + qsMonth + "-" + qsDay);
             }
         });
         //取消按钮，如果不需要直接不设置即可
@@ -490,6 +548,10 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         Calendar cal = Calendar.getInstance();
         final DatePickerDialog jzDialog = new DatePickerDialog(this, null,
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+
+        Date date = new Date();
+        long time = date.getTime();
+        jzDialog.getDatePicker().setMinDate(time);
         //手动设置按钮
         jzDialog.setButton(DialogInterface.BUTTON_POSITIVE, "完成", new DialogInterface.OnClickListener() {
             @Override
@@ -506,7 +568,15 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
                 } else {
                     jzMonth = month + "";
                 }
-                tvDcJzsj.setText(year + "-" + jzMonth + "-" + day);
+
+                String jzDay = "";
+                if (day < 10) {
+                    jzDay = "0" + day;
+                } else {
+                    jzDay = day + "";
+                }
+
+                tvDcJzsj.setText(year + "-" + jzMonth + "-" + jzDay);
             }
         });
         //取消按钮，如果不需要直接不设置即可
@@ -518,6 +588,67 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         });
 
         jzDialog.show();
+    }
+
+    private int which = -1;
+    int yourChoice;
+
+    private void ShowSingleDialog(int item) {
+
+        final String[] items = new String[listType.size()];
+        for (int i = 0; i < listType.size(); i++) {
+            items[i] = listType.get(i);
+        }
+
+        yourChoice = -1;
+        AlertDialog.Builder singleChoiceDialog =
+                new AlertDialog.Builder(ZxzDetailsActivity.this);
+        singleChoiceDialog.setTitle("请选择操作类型");
+        // 第二个参数是默认选项，此处设置为0
+        singleChoiceDialog.setSingleChoiceItems(items, item,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        yourChoice = which;
+                        ZxzDetailsActivity.this.which = which;
+                        strSelecte = mapType.get(listType.get(which));
+                    }
+                });
+
+        singleChoiceDialog.setPositiveButton("确定",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (yourChoice != -1) {
+                            tvCzlx.setText(items[yourChoice]);
+
+                        }
+                    }
+                });
+        singleChoiceDialog.show();
+    }
+
+    private void feedDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ZxzDetailsActivity.this);
+        LayoutInflater inflater = LayoutInflater.from(ZxzDetailsActivity.this);
+        View v = inflater.inflate(R.layout.feed_dialog, null);
+        tvMsg = v.findViewById(R.id.tv_dialog_msg);
+        Button bCancle = v.findViewById(R.id.b_dialog_cancle);
+
+//        //builer.setView(v);//这里如果使用builer.setView(v)，自定义布局只会覆盖title和button之间的那部分
+        feedDialog = builder.create();
+        feedDialog.setCancelable(false);
+        feedDialog.show();
+        feedDialog.getWindow().setContentView(v);//自定义布局应该在这里添加，要在dialog.show()的后面
+        feedDialog.getWindow().setGravity(Gravity.CENTER);//可以设置显示的位置
+        bCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HttpUtils.cancleAllCall(ZxzDetailsActivity.this);
+                feedDialog.dismiss();
+            }
+        });
+
     }
 
     public void zpSubmitSuccess(ZpFeedModel zpFeedModel) {
@@ -548,16 +679,23 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
     }
 
     public String snQssj(String sj) {
-        if ("查封开始时间".equals(sj)) {
+        if ("".equals(sj)) {
             return "";
         }
         return tvDcQssj.getText() + " 00:00:00";
     }
 
     public String snJzsj(String sj) {
-        if ("查封结束时间".equals(sj)) {
+        if ("".equals(sj)) {
             return "";
         }
         return tvDcJzsj.getText() + " 00:00:00";
+    }
+
+    public void successRed(String str) {
+        Message msg = Message.obtain();
+        msg.what = SUCCREDZXZ;
+        msg.obj = str;
+        mHandler.sendMessage(msg);
     }
 }

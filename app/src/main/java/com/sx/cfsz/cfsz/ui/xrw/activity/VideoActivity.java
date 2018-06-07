@@ -86,9 +86,9 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
 
     private void initView() {
         BaseApplication.addList(this);
+        mSurfaceView = (SurfaceView) findViewById(R.id.surface_view);
         videoWidth = 640;
         videoHeight = 480;
-        mSurfaceView = (SurfaceView) findViewById(R.id.surface_view);
 
         mDetector = new GestureDetector(this, new ZoomGestureListener());
         /**
@@ -242,7 +242,6 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
         if (isRecording) {
             stopRecord();
             UIUtils.showToast(this, "视频已经放至" + mTargetFile.getAbsolutePath());
-            Log.d("onSuccess1", mTargetFile.getAbsolutePath());
             Intent intent = new Intent();
             intent.putExtra("mp4Url", mTargetFile.getAbsolutePath());
             VideoActivity.this.setResult(RESULT_OK, intent);

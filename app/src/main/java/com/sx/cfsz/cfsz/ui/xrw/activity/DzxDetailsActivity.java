@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sx.cfsz.R;
@@ -36,7 +37,7 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
     private static final int SUBMIT = 100;
     private static final int SUCCRED = 1000;
 
-    private ImageView ivBack;
+    private LinearLayout ivBack;
     private TextView tvImplement;
     private TextView tvAjh;
     private TextView tvAddres;
@@ -112,7 +113,7 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void initView() {
-        ivBack = findViewById(R.id.iv_dzx_back);
+        ivBack = findViewById(R.id.ll_dzx_back);
         tvImplement = findViewById(R.id.tv_dzx_implement);
         tvAjh = findViewById(R.id.tv_dzx_ajh);
         tvAddres = findViewById(R.id.tv_dzx_addres);
@@ -129,7 +130,7 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_dzx_back:
+            case R.id.ll_dzx_back:
                 if ("1".equals(red_sign)) {
                     Intent intent = new Intent();
                     intent.putExtra("state", "20");
@@ -140,7 +141,6 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.tv_dzx_implement:
                 presenter.submit(task_id,red_sign);
-
                 break;
             case R.id.iv_navige:
                 //调起高德导航
@@ -167,7 +167,6 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-
     /**
      * 启动高德App进行导航
      * <h3>Version</h3> 1.0
@@ -183,6 +182,7 @@ public class DzxDetailsActivity extends AppCompatActivity implements View.OnClic
      * @param dev               必填 是否偏移(0:lat 和 lon 是已经加密后的,不需要国测加密; 1:需要国测加密)
      * @param style             必填 导航方式(0 速度快; 1 费用少; 2 路程短; 3 不走高速；4 躲避拥堵；5 不走高速且避免收费；6 不走高速且躲避拥堵；7 躲避收费和拥堵；8 不走高速躲避收费和拥堵))
      */
+
     public static void goToNaviActivity(Context context, String sourceApplication, String poiname, String lat, String lon, String dev, String style) {
         StringBuffer stringBuffer = new StringBuffer("androidamap://navi?sourceApplication=")
                 .append(sourceApplication);

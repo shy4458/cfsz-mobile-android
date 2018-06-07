@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 
 import com.google.gson.Gson;
 import com.sx.cfsz.baseframework.base.AppConfig;
+import com.sx.cfsz.baseframework.base.BaseApplication;
 import com.sx.cfsz.baseframework.http.HttpUtils;
 import com.sx.cfsz.baseframework.http.OnRequestResult;
 import com.sx.cfsz.cfsz.model.RwModel;
@@ -32,6 +33,7 @@ public class ZxzFragmentPresenter {
      * @param rows
      * @param state 0 下拉刷新 1正常加载
      */
+
     public void getData(int page, int rows,int state) {
         activity = (MainActivity) fragment.getActivity();
         this.state =state;
@@ -39,7 +41,7 @@ public class ZxzFragmentPresenter {
             activity.showDialog(fragment.getActivity());
         }
 
-        String url = AppConfig.IP + AppConfig.ZXZ + AppConfig.PAGE + page + AppConfig.ROWS + rows;
+        String url = AppConfig.IP + AppConfig.ZXZ  + BaseApplication.get("userId", "") + "&" + AppConfig.PAGE + page + AppConfig.ROWS + rows;
         HttpUtils.getAsync(url, fragment.getActivity(), new OnRequestResult() {
             @Override
             public void result(Exception e, Response response) {
@@ -58,6 +60,7 @@ public class ZxzFragmentPresenter {
             }
         });
     }
+
     public void dialogDismis() {
         if (this.state == 1) {
             activity.disDialog();

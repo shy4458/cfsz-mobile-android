@@ -1,6 +1,7 @@
 package com.sx.cfsz.baseframework.base;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
@@ -8,7 +9,7 @@ import java.util.Calendar;
 
 public class AppConfig {
 
-    public static String userId = BaseApplication.get("userId","");
+
     public static final String PERF_NAME = "sx.pref";
     public static final String IMG_LIST = "img_list"; //第几张图片
     public static final String POSITION = "position"; //第几张图片
@@ -23,11 +24,21 @@ public class AppConfig {
 
     public static final int ROWSNUMBER = 20;
 
-    //ip
+    //调式接口ip
     public static final String IP = "http://192.168.120.115:9000/";
+
+    //测试接口
+//    public static final String IP = "http://10.100.105.5:7020/";
+
+    //领导接口
+    //http://cyfytest.beikongyun.com/
+    //http://192.168.40.157:59000/
+//    public static final String IP = "http://cyfytest.beikongyun.com/";
+//    public static final String IP = "http://192.168.40.157:59000/";
+
     //登陆 http://192.168.120.115:9000/user/login?userName=张继科&userPwd=123123
     //登录后token http://192.168.120.115:9000/task/token?userToken=&userName=
-    public static final String TOKEN ="user/token?userToken=";
+    public static final String TOKEN = "user/token?userToken=";
     //NAME
     public static final String USERNAME = "&userName=";
     public static final String LOGIN = "user/login?";
@@ -40,14 +51,14 @@ public class AppConfig {
     //userId
     public static final String USERID = "?user_id=";
     //每个状态下的总数  http://192.168.120.115:9000/task/Appidsjl
-    public static final String NUMBER = "task/Appidsjl?user_id=" + userId;
+    public static final String NUMBER = "task/Appidsjl?user_id=";
     //待执行
     //http://192.168.120.115:9000/task/Appdzx?page=1&rows=10
-    public static final String DZX = "task/Appdzx?user_id=" +userId + "&";
+    public static final String DZX = "task/Appdzx?user_id=";
     //执行中
-    public static final String ZXZ = "task/Appzxz?user_id=" + userId+ "&";
+    public static final String ZXZ = "task/Appzxz?user_id=";
     //已完成
-    public static final String YWC = "task/Appywc?user_id=" + userId+ "&";
+    public static final String YWC = "task/Appywc?user_id=";
     //当前页
     public static final String PAGE = "page=";
     //每页数据量
@@ -56,13 +67,13 @@ public class AppConfig {
     public static final String TIANJIA = "task/AppdzxDAOzxz?task_ids=";
     //搜索
     //http://192.168.120.115:9000/task/Appsrw?参数（必传user_id;非必传case_id（案件号）；非必传ks_time(开始时间）；非必传js_time(结束时间)）。
-    public static final String SJSEARCH = "task/Appsrw?user_id=" +userId ;
+    public static final String SJSEARCH = "task/Appsrw?user_id=";
     //开始时间
     public static final String KS_TIME = "&ks_time=";
     //结束时间
     public static final String JS_TIME = "&js_time=";
     //案件号
-    public static final String CASE_ID = "task/Appsrw?user_id="+userId+ "&case_id=";
+    public static final String CASE_ID = "task/Appsrw?user_id=";
     //多选提交  http://192.168.120.115:9000/task/AppdzxDAOzxz?task_ids=
     public static final String ALLSUBMIT = "task/AppdzxDAOzxz?task_ids=";
     //去红点 单选  http://192.168.120.115:9000/task/Appidred?task_id=（去红点，单条操作）
@@ -95,7 +106,6 @@ public class AppConfig {
     public static final String DQZP = "task/fkzp?imgName=";
     //视频  http://192.168.120.115:9000/task/fksp?videoName=992343926926999553.mp4
     public static final String DQSP = "task/fksp?videoName=";
-
     //统计查询中的案件概括详情
     public static final String TJSJ = "task/ajqk";
     //每个月统计
@@ -109,15 +119,7 @@ public class AppConfig {
     //版本号
     public static final String BB = "task/selectversion";
     //更新地址
-    public static final String PATH = "task/downloadPackage";
-
-
-
-
-
-
-
-
+    public static final String PATH = "task/com.sx.cfsz.apk";
 
     public static int getPackageCode(Context context) {
         PackageManager manager = context.getPackageManager();
@@ -133,9 +135,9 @@ public class AppConfig {
 
     public static String getDate() {
         Calendar c = Calendar.getInstance();//
-        int mYear = c.get(Calendar.YEAR); // 获取当前年份
-        int mMonth = c.get(Calendar.MONTH) + 1;// 获取当前月份
-        int mDay = c.get(Calendar.DAY_OF_MONTH);// 获取当日期
+        long mYear = c.get(Calendar.YEAR); // 获取当前年份
+        long mMonth = c.get(Calendar.MONTH) + 1;// 获取当前月份
+        long mDay = c.get(Calendar.DAY_OF_MONTH);// 获取当日期
 
         int mWay = c.get(Calendar.DAY_OF_WEEK);// 获取当前日期的星期
         int mHour = c.get(Calendar.HOUR_OF_DAY);//时
@@ -150,8 +152,7 @@ public class AppConfig {
             strMonth = "0" + strMonth;
         }
 
-        return mYear + "" + strMonth + "" + strDay + "";
-
+        return mYear + "-" + strMonth + "-" + strDay + "";
     }
 
     public static String getDateMonth() {
@@ -167,7 +168,6 @@ public class AppConfig {
         if (sMonth.length() == 1) {
             sMonth = "0" + sMonth;
         }
-
         return mYear + "" + sMonth + "01";
     }
 

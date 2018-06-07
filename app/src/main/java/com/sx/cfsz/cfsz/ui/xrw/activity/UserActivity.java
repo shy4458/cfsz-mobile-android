@@ -1,9 +1,7 @@
 package com.sx.cfsz.cfsz.ui.xrw.activity;
 
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,15 +9,16 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
+import com.sx.cfsz.BuildConfig;
 import com.sx.cfsz.R;
 import com.sx.cfsz.baseframework.base.AppConfig;
 import com.sx.cfsz.baseframework.base.BaseApplication;
-import com.sx.cfsz.baseframework.util.UIUtils;
 import com.sx.cfsz.cfsz.dagger.component.DaggerUserActivityComponent;
 import com.sx.cfsz.cfsz.dagger.module.UserActivityModule;
 import com.sx.cfsz.cfsz.presenter.UserActivityPresenter;
-import com.yalantis.ucrop.view.CropImageView;
+import com.sx.cfsz.cfsz.ui.LoginActivity;
+import com.tencent.android.tpush.XGPushManager;
 
 import javax.inject.Inject;
 
@@ -34,30 +33,10 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     UserActivityPresenter presenter;
     private static final int BB = 55;
 
-    @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case BB:
-                    int bb = (int) msg.obj;
-                    int packageCode = AppConfig.getPackageCode(UserActivity.this);
-                    if (bb > packageCode) {
 
-
-
-                    } else {
-                        UIUtils.showToast(UserActivity.this, "您当前版本为最新版本.");
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
     private CircleImageView civ;
     private TextView tvName;
+    private TextView tvBbh;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,7 +49,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initData() {
-        Glide.with(this).load(AppConfig.IP + AppConfig.PIC + BaseApplication.get("UserHeadpic","")).into(civ);
+        Picasso.with(this).load(AppConfig.IP + AppConfig.PIC + BaseApplication.get("UserHeadpic","")).placeholder(R.drawable.default_head).into(civ);
         tvName.setText(BaseApplication.get("userName",""));
     }
 
@@ -78,7 +57,10 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         Button bTc = findViewById(R.id.bTc);
         LinearLayout bb = findViewById(R.id.ll_banben);
         civ = findViewById(R.id.civHead_user);
+//         = findViewById(R.id.ll_gywm);
         tvName = findViewById(R.id.tv_name);
+        tvBbh = findViewById(R.id.tv_bbh);
+        tvBbh.setText(BuildConfig.VERSION_NAME);
         bTc.setOnClickListener(this);
         bb.setOnClickListener(this);
     }
@@ -87,19 +69,19 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bTc:
+                BaseApplication.removeUserId();
+                XGPushManager.unregisterPush(BaseApplication.context());
+                Intent intent = new Intent(UserActivity.this, LoginActivity.class);
+                startActivity(intent);
                 BaseApplication.clenList();
+
                 break;
 
             case R.id.ll_banben:
-                presenter.update();
+
                 break;
         }
     }
 
-    public void sucessBB(int bb) {
-        Message msg = Message.obtain();
-        msg.what = BB;
-        msg.obj = bb;
-        mHandler.sendMessage(msg);
-    }
+
 }

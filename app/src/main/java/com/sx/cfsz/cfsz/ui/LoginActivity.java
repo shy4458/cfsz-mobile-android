@@ -2,11 +2,17 @@ package com.sx.cfsz.cfsz.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.SpannedString;
+import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -66,11 +72,12 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
                                 BaseApplication.set("userId", loginModel.getData().getUserId());
                                 BaseApplication.set("userName", loginModel.getData().getUserName());
-                                BaseApplication.set("UserHeadpic",loginModel.getData().getUserHeadpic());
+                                BaseApplication.set("UserHeadpic", loginModel.getData().getUserHeadpic());
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.putExtra("userPost", loginModel.getData().getUserPost());
                                 startActivity(intent);
                                 finish();
+
                             }
                         } else {
                             //登陆不成功
@@ -91,15 +98,27 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        BaseApplication.addList(this);
+//        BaseApplication.addList(this);
         DaggerLoginComponent.builder().loginActivityModule(new LoginActivityModule(this)).build().in(this);
         initView();
     }
 
     private void initView() {
+
         bLogin = findViewById(R.id.bLogin);
         etName = findViewById(R.id.et_name);
         etPwd = findViewById(R.id.et_pwd);
+//          用此方法设置hint字体大小后 没有dis效果
+//        SpannableString name = new SpannableString("用户名");//定义hint的值
+//        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(15,true);//设置字体大小 true表示单位是sp
+//        name.setSpan(ass, 0, name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        etName.setHint(new SpannedString(name));
+//
+//
+//        SpannableString pwd = new SpannableString("密码");//定义hint的值
+//        pwd.setSpan(ass, 0, pwd.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        etPwd.setHint(new SpannedString(pwd));
+
         //禁止换行
         etName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -107,13 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                 return (event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
             }
         });
-//        etPwd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                return (event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
-//            }
-//        });
-//        etName.setHorizontallyScrolling(true);
+
         bLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -42,7 +42,7 @@ public class YwcDetailsActivity extends AppCompatActivity implements AdapterView
     @Inject
     YwcDetailsPresenter presenter;
 
-    private ImageView ivBack;
+    private LinearLayout llBack;
     private TextView tvAjh;
     private TextView tvAddres;
     private TextView tvQssj;
@@ -68,6 +68,7 @@ public class YwcDetailsActivity extends AppCompatActivity implements AdapterView
     private String task_lng;
     private String task_address;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +76,6 @@ public class YwcDetailsActivity extends AppCompatActivity implements AdapterView
         DaggerYwcDetaileComponent.builder().ywcDetailsModule(new YwcDetailsModule(this)).build().in(this);
         Intent intent = getIntent();
         initView();
-
         String task_num = intent.getStringExtra("Task_num");
         task_address = intent.getStringExtra("Task_address");
         String plan_time_start = intent.getStringExtra("Plan_time_start");
@@ -93,6 +93,7 @@ public class YwcDetailsActivity extends AppCompatActivity implements AdapterView
         String sealup_time_start = intent.getStringExtra("Sealup_time_start");
         String sealup_time_end = intent.getStringExtra("Sealup_time_end");
         String task_type = intent.getStringExtra("Task_type");
+        String task_result_message = intent.getStringExtra("Task_result_message");
 
         tvAjh.setText(task_num);
         tvAddres.setText(task_address);
@@ -101,7 +102,7 @@ public class YwcDetailsActivity extends AppCompatActivity implements AdapterView
         tvRwnr.setText(task_content);
         tvMsxx.setText(feedback_msg);
 
-        tvCzlx.setText(task_type);
+        tvCzlx.setText(task_result_message);
         tvDcQssj.setText(splitSj(sealup_time_start));
         tvDcJzsj.setText(splitSj(sealup_time_end));
         if (oldName == null) {
@@ -131,7 +132,7 @@ public class YwcDetailsActivity extends AppCompatActivity implements AdapterView
 
     private void initView() {
         BaseApplication.addList(this);
-        ivBack = findViewById(R.id.iv_ywc_back);
+        llBack = findViewById(R.id.ll_ywc_back);
         tvAjh = findViewById(R.id.tv_ywc_ajh);
         tvAddres = findViewById(R.id.tv_ywc_address);
         tvQssj = findViewById(R.id.tv_ywc_qssj);
@@ -166,7 +167,7 @@ public class YwcDetailsActivity extends AppCompatActivity implements AdapterView
     }
 
     private void intLister() {
-        ivBack.setOnClickListener(this);
+        llBack.setOnClickListener(this);
         ivNavige.setOnClickListener(this);
         YwcGVAdapter ywcGVAdapter = new YwcGVAdapter(YwcDetailsActivity.this, zpList);
         gridView.setAdapter(ywcGVAdapter);
@@ -203,7 +204,7 @@ public class YwcDetailsActivity extends AppCompatActivity implements AdapterView
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.iv_ywc_back:
+            case R.id.ll_ywc_back:
               finish();
                 break;
 

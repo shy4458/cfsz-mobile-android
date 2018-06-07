@@ -249,11 +249,18 @@ public class XrwFragment extends Fragment implements View.OnClickListener, ViewP
             tvYwctitle.setTextColor(Color.WHITE);
         }
     }
+
+    public void xgRefresh(){
+        presenter.getNumber();
+        vp.setCurrentItem(0);
+    }
+
     //多选取消
     public void setAllNo() {
         dzxFragment.setAllNo();
         dzxFragment.setRefreshLoad(true);
     }
+
     //多选确定
     public void setAllYes() {
         dzxFragment.setAllYse();
@@ -261,5 +268,4 @@ public class XrwFragment extends Fragment implements View.OnClickListener, ViewP
         dzxFragment.dzxAllListRows.clear();
         dzxFragment.presenter.getData(1,AppConfig.ROWSNUMBER,1);
     }
-
 }

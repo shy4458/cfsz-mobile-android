@@ -1,11 +1,10 @@
 package com.sx.cfsz.baseframework.http;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-
+import android.util.Log;
 
 import com.sx.cfsz.baseframework.util.SecurityUtils;
 
@@ -63,17 +62,17 @@ public class HttpUtils {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                if(!call.isCanceled()) {
+                if (!call.isCanceled()) {
                     call.cancel();
                 }
-                if(result != null) {
+                if (result != null) {
                     result.result(e, null);
                 }
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if(result != null) {
+                if (result != null) {
                     result.result(null, response);
                 }
             }
@@ -81,11 +80,11 @@ public class HttpUtils {
     }
 
     public static void postFilesAsync(@NonNull String url, @NonNull Context context, FileInfo[] files,
-                                     final OnRequestResult result) {
+                                      final OnRequestResult result) {
         MultipartBody.Builder mbBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        if(files != null && files.length > 0) {
+        if (files != null && files.length > 0) {
             FileInfo fileInfo;
-            for(int i = 0, len = files.length; i < len; i++) {
+            for (int i = 0, len = files.length; i < len; i++) {
                 fileInfo = files[i];
                 File file = fileInfo.getFile();
                 String fileName = file.getName();
@@ -94,78 +93,79 @@ public class HttpUtils {
                 mbBuilder.addFormDataPart(fileInfo.getFormName(), fileName, body);
             }
         }
-        client
-            .newCall(newRequest(url, context, "POST", mbBuilder.build(), false))
-            .enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    if(!call.isCanceled()) {
-                        call.cancel();
-                    }
-                    if(result != null) {
-                        result.result(e, null);
-                    }
-                }
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if(result != null) {
-                        result.result(null, response);
+        client
+                .newCall(newRequest(url, context, "POST", mbBuilder.build(), false))
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        if (!call.isCanceled()) {
+                            call.cancel();
+                        }
+                        if (result != null) {
+                            result.result(e, null);
+                        }
                     }
-                }
-            });
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if (result != null) {
+                            result.result(null, response);
+                        }
+                    }
+                });
     }
 
     public static void postFormAsync(@NonNull String url, @NonNull Context context,
-                            Map<String, String> params,
-                            final OnRequestResult result) {
-        HttpUrl httpUrl = HttpUrl.parse(url);
-        String sortResult = sortParams(httpUrl, params);
-        String sign = sign(httpUrl, sortResult);
-        FormBody.Builder bodyBuilder = new FormBody.Builder();
-        if(params != null && params.size() > 0) {
-            Set<Map.Entry<String, String>> entries = params.entrySet();
-            for(Map.Entry<String, String> entry : entries) {
-                String value = entry.getValue();
-                if(!TextUtils.isEmpty(value)) {
-                    bodyBuilder.add(entry.getKey(), value);
-                }
-            }
-        }
-        client
-            .newCall(newRequest(url, context, "POST", bodyBuilder.build(), false))
-            .enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    if(!call.isCanceled()) {
-                        call.cancel();
-                    }
-                    if(result != null) {
-                        result.result(e, null);
-                    }
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if(result != null) {
-                        result.result(null, response);
-                    }
-                }
-            });
-    }
-
-    public static void deleteFormAsync(@NonNull String url, @NonNull Context context,
                                      Map<String, String> params,
                                      final OnRequestResult result) {
         HttpUrl httpUrl = HttpUrl.parse(url);
         String sortResult = sortParams(httpUrl, params);
         String sign = sign(httpUrl, sortResult);
         FormBody.Builder bodyBuilder = new FormBody.Builder();
-        if(params != null && params.size() > 0) {
+        if (params != null && params.size() > 0) {
             Set<Map.Entry<String, String>> entries = params.entrySet();
-            for(Map.Entry<String, String> entry : entries) {
+            for (Map.Entry<String, String> entry : entries) {
                 String value = entry.getValue();
-                if(!TextUtils.isEmpty(value)) {
+                if (!TextUtils.isEmpty(value)) {
+                    bodyBuilder.add(entry.getKey(), value);
+                }
+            }
+        }
+        client
+                .newCall(newRequest(url, context, "POST", bodyBuilder.build(), false))
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        if (!call.isCanceled()) {
+                            call.cancel();
+                        }
+                        if (result != null) {
+                            result.result(e, null);
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if (result != null) {
+                            result.result(null, response);
+                        }
+                    }
+                });
+    }
+
+    public static void deleteFormAsync(@NonNull String url, @NonNull Context context,
+                                       Map<String, String> params,
+                                       final OnRequestResult result) {
+        HttpUrl httpUrl = HttpUrl.parse(url);
+        String sortResult = sortParams(httpUrl, params);
+        String sign = sign(httpUrl, sortResult);
+        FormBody.Builder bodyBuilder = new FormBody.Builder();
+        if (params != null && params.size() > 0) {
+            Set<Map.Entry<String, String>> entries = params.entrySet();
+            for (Map.Entry<String, String> entry : entries) {
+                String value = entry.getValue();
+                if (!TextUtils.isEmpty(value)) {
                     bodyBuilder.add(entry.getKey(), value);
                 }
             }
@@ -175,17 +175,17 @@ public class HttpUtils {
                 .enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        if(!call.isCanceled()) {
+                        if (!call.isCanceled()) {
                             call.cancel();
                         }
-                        if(result != null) {
+                        if (result != null) {
                             result.result(e, null);
                         }
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        if(result != null) {
+                        if (result != null) {
                             result.result(null, response);
                         }
                     }
@@ -202,14 +202,14 @@ public class HttpUtils {
     public static synchronized void cancleAllCall(@NonNull Context context) {
         Dispatcher dispatcher = client.dispatcher();
         List<Call> queuedCalls = dispatcher.queuedCalls();
-        for(Call call : queuedCalls) {
-            if(context.equals(call.request().tag())) {
+        for (Call call : queuedCalls) {
+            if (context.equals(call.request().tag())) {
                 call.cancel();
             }
         }
         List<Call> runningCalls = dispatcher.runningCalls();
-        for(Call call : runningCalls) {
-            if(context.equals(call.request().tag())) {
+        for (Call call : runningCalls) {
+            if (context.equals(call.request().tag())) {
                 call.cancel();
             }
         }
@@ -226,17 +226,18 @@ public class HttpUtils {
      * @return
      */
     public static Request newRequest(@NonNull String url, @NonNull Context context,
-            String method, RequestBody body, boolean hasAuth) {
+                                     String method, RequestBody body, boolean hasAuth) {
         Request.Builder builder = new Request.Builder()
                 .url(url)
                 .method(method, body)
                 .tag(context)
                 .header("User-Agent", userAgent);
-                //.header(HEADER_APP_KEY, ApiAuthUtils.getAppKey())
-                //.header(HEADER_URL_SIGN, urlSign);
-        if(hasAuth) {
+        //.header(HEADER_APP_KEY, ApiAuthUtils.getAppKey())
+        //.header(HEADER_URL_SIGN, urlSign);
+        if (hasAuth) {
             builder.header(HEADER_ACCESS_TOKEN, ApiAuthUtils.getAccessToken())
-                   .header(HEADER_REFRESH_TOKEN, ApiAuthUtils.getRefreshToken());
+                    .header("Accept-Encoding", "identity")
+                    .header(HEADER_REFRESH_TOKEN, ApiAuthUtils.getRefreshToken());
         }
         return builder.build();
     }
@@ -245,28 +246,28 @@ public class HttpUtils {
         StringBuilder sb = new StringBuilder();
         List<String> paramNames = new ArrayList<>();
         int limit = 0;
-        if(url != null) {
+        if (url != null) {
             int size = url.querySize();
-            if(size > 0) {
+            if (size > 0) {
                 paramNames.addAll(url.queryParameterNames());
                 limit = size;
             }
         }
-        if(map != null) {
+        if (map != null) {
             paramNames.addAll(map.keySet());
         }
         Collections.sort(paramNames);
-        for(int i = 0, len = paramNames.size(); i < len; i++) {
+        for (int i = 0, len = paramNames.size(); i < len; i++) {
             String str = paramNames.get(i);
             sb.append(str);
-            if(i < limit && url != null) {
+            if (i < limit && url != null) {
                 List<String> values = url.queryParameterValues(str);
-                if(values.size() > 1) {
+                if (values.size() > 1) {
                     Collections.sort(values);
-                    for(String value : values) {
+                    for (String value : values) {
                         sb.append(value);
                     }
-                } else if(values.size() == 1) {
+                } else if (values.size() == 1) {
                     sb.append(values.get(0));
                 }
             } else {
@@ -280,4 +281,40 @@ public class HttpUtils {
         String appSecret = ApiAuthUtils.getAppSecret();
         return SecurityUtils.hmacMD5(str + url.encodedPath() + appSecret, appSecret);
     }
+
+    //测试上传文件进度
+    public static void postProFilesAsync(@NonNull String url, @NonNull Context context, FileInfo[] files,
+                                         final OnRequestResult result, final ProgressRequestListener listener) {
+        MultipartBody.Builder mbBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+        if (files != null && files.length > 0) {
+            FileInfo fileInfo;
+            for (int i = 0, len = files.length; i < len; i++) {
+                fileInfo = files[i];
+                File file = fileInfo.getFile();
+                String fileName = file.getName();
+                String suffix = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+                RequestBody body = RequestBody.create(MediaType.parse(fileInfo.getFileType().getValue() + "/" + suffix), file);
+                mbBuilder.addFormDataPart(fileInfo.getFormName(), fileName, body);
+            }
+        }
+
+        MultipartBody build = builder.build();
+        Request request = new Request.Builder().url(url).post(new ProgressRequestBody(build, listener)).build();
+
+        client
+                .newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+            }
+        });
+    }
+
+
 }

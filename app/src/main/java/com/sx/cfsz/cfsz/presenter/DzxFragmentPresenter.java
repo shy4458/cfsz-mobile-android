@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 
 import com.google.gson.Gson;
 import com.sx.cfsz.baseframework.base.AppConfig;
+import com.sx.cfsz.baseframework.base.BaseApplication;
 import com.sx.cfsz.baseframework.http.HttpUtils;
 import com.sx.cfsz.baseframework.http.OnRequestResult;
 import com.sx.cfsz.cfsz.model.RwModel;
@@ -41,7 +42,7 @@ public class DzxFragmentPresenter {
             activity.showDialog(fragment.getActivity());
         }
 
-        String url = AppConfig.IP + AppConfig.DZX + AppConfig.PAGE + page + AppConfig.ROWS + rows;
+        String url = AppConfig.IP + AppConfig.DZX  + BaseApplication.get("userId", "") + "&"+ AppConfig.PAGE + page + AppConfig.ROWS + rows;
         HttpUtils.getAsync(url, fragment.getActivity(), new OnRequestResult() {
             @Override
             public void result(Exception e, Response response) {

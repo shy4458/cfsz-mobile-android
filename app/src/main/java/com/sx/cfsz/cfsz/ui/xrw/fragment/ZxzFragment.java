@@ -161,7 +161,7 @@ public class ZxzFragment extends Fragment {
                 intent.putExtra("Result", zxzAllListRows.get(position).getResult());
                 intent.putExtra("Task_sfbq", zxzAllListRows.get(position).getTask_sfbq());
                 intent.putExtra("Task_id",zxzAllListRows.get(position).getTask_id());
-
+                intent.putExtra("Red_sign",zxzAllListRows.get(position).getRed_sign());
                 startActivityForResult(intent,30);
             }
         });

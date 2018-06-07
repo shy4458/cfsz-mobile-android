@@ -38,7 +38,7 @@ public class BaseApplication extends Application {
             @Override
             public void onActivityStarted(Activity activity) {
                 if (count == 0) {
-                    Log.d("BaseApplication", ">>>>>>>>>>>>>>>>>>>切到前台  lifecycle");
+//                    Log.d("BaseApplication", ">>>>>>>>>>>>>>>>>>>切到前台  lifecycle");
                 }
                 count++;
             }
@@ -57,7 +57,7 @@ public class BaseApplication extends Application {
             public void onActivityStopped(Activity activity) {
                 count--;
                 if (count == 0) {
-                    Log.d("BaseApplication", ">>>>>>>>>>>>>>>>>>>切到后台  lifecycle");
+//                    Log.d("BaseApplication", ">>>>>>>>>>>>>>>>>>>切到后台  lifecycle");
                 }
             }
 
@@ -141,9 +141,14 @@ public class BaseApplication extends Application {
     public static String get(String key, String defaultValue) {
         return getPreferences().getString(key, defaultValue);
     }
+    public static void removeUserId(){
+        SharedPreferences.Editor edit = getPreferences().edit();
+        edit.clear();
+        edit.commit();
+    }
 
     public static SharedPreferences getPreferences() {
-        return context().getSharedPreferences(AppConfig.PERF_NAME, Context.MODE_PRIVATE);
+        return context().getSharedPreferences(AppConfig.PERF_NAME, Context.MODE_PRIVATE );
     }
 
 }

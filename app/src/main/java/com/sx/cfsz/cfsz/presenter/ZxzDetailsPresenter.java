@@ -14,6 +14,8 @@ import com.sx.cfsz.cfsz.ui.xrw.activity.ZxzDetailsActivity;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.Response;
 
@@ -26,6 +28,27 @@ public class ZxzDetailsPresenter {
 
     public ZxzDetailsPresenter(ZxzDetailsActivity activity) {
         this.activity = activity;
+    }
+
+    //去掉红点
+    public void remoRed(String task_id, String red_sign) {
+        String url = AppConfig.IP + AppConfig.REMORED + task_id + AppConfig.RED + red_sign;
+        HttpUtils.getAsync(url, activity, new OnRequestResult() {
+            @Override
+            public void result(Exception e, Response response) {
+                if (e == null) {
+                    if (response != null && response.isSuccessful()) {
+                        try {
+                            String str = response.body().string();
+                            activity.successRed(str);
+
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public void feedZp(ArrayList<String> mPicList) {
@@ -47,7 +70,7 @@ public class ZxzDetailsPresenter {
                 fileInfo.setFile(file);
                 fileInfos[i] = fileInfo;
             }
-            HttpUtils.postFilesAsync(url, activity,fileInfos,new OnRequestResult() {
+            HttpUtils.postFilesAsync(url, activity, fileInfos, new OnRequestResult() {
                 @Override
                 public void result(Exception e, Response response) {
                     if (e == null) {
@@ -128,8 +151,7 @@ public class ZxzDetailsPresenter {
         }
     }
 
-    public void feed(String user_id, String task_id, Editable text, String zp, String sp, String s1,String qssj ,String jzsj) {
-
+    public void feed(String user_id, String task_id, Editable text, String zp, String sp, String s1, String qssj, String jzsj) {
         String feedUrl = AppConfig.IP + AppConfig.FEED + AppConfig.ID + user_id + AppConfig.RWID + task_id + AppConfig.FEEDCONTENT + text
                 + AppConfig.ZPURL + zp + AppConfig.SPURL + sp + AppConfig.RESULT + s1 + AppConfig.FYQSSJ + qssj + AppConfig.FYJSSJ + jzsj;
         HttpUtils.getAsync(feedUrl, activity, new OnRequestResult() {
@@ -148,5 +170,32 @@ public class ZxzDetailsPresenter {
                 }
             }
         });
+//        String feedUrl = AppConfig.IP + AppConfig.FEED;
+//        Map<String, String> map = new HashMap<>();
+//        map.put(AppConfig.ID, user_id);
+//        map.put(AppConfig.RWID, task_id);
+//        map.put(AppConfig.FEEDCONTENT, text.toString());
+//        map.put(AppConfig.ZPURL, zp);
+//        map.put(AppConfig.SPURL, sp);
+//        map.put(AppConfig.RESULT, s1);
+//        map.put(AppConfig.FYQSSJ, qssj);
+//        map.put(AppConfig.FYJSSJ, jzsj);
+//
+//        HttpUtils.postFormAsync(feedUrl, activity, map, new OnRequestResult() {
+//            @Override
+//            public void result(Exception e, Response response) {
+//                if (e == null) {
+//                    if (response != null && response.isSuccessful()) {
+//                        try {
+//                            String string = response.body().string();
+//                            activity.feedSuccess();
+//
+//                        } catch (IOException e1) {
+//                            e1.printStackTrace();
+//                        }
+//                    }
+//                }
+//            }
+//        });
     }
 }

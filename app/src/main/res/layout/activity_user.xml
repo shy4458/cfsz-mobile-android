@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
-            android:text="NAME | 执行官" />
+            android:text="NAME" />
     </FrameLayout>
 
     <LinearLayout
@@ -47,6 +47,15 @@
             android:layout_gravity="center"
             android:text="当前版本" />
 
+        <TextView
+            android:id="@+id/tv_bbh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
+            android:layout_marginRight="20dp"
+            android:text="1.0.0"
+            />
+
         <!--<ImageView-->
             <!--android:layout_marginLeft="100dp"-->
             <!--android:layout_width="wrap_content"-->
@@ -56,32 +65,33 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_marginTop="0.5dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/colorWhite"
-        android:orientation="horizontal">
+    <!--<LinearLayout-->
+        <!--android:id="@+id/ll_gywm"-->
+        <!--android:layout_marginTop="0.5dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:background="@color/colorWhite"-->
+        <!--android:orientation="horizontal">-->
 
-        <ImageView
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/ic_about" />
+        <!--<ImageView-->
+            <!--android:layout_marginLeft="15dp"-->
+            <!--android:layout_marginRight="15dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:background="@drawable/ic_about" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="关于我们" />
-    </LinearLayout>
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:text="关于我们" />-->
+    <!--</LinearLayout>-->
 
 
     <Button
         android:id="@+id/bTc"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="150dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_width="match_parent"
