@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etPwd;
 
     private static final int LOGIN = 66;
+    private static final int LOGMSG = 67;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -64,28 +65,18 @@ public class LoginActivity extends AppCompatActivity {
             switch (msg.what) {
                 case LOGIN:
                     LoginModel loginModel = (LoginModel) msg.obj;
-                    if (loginModel.getData() != null) {
-                        if (loginModel.getData().getUserStatus() == 1) {
-                            //登陆成功  //保存userId
-                            if (loginModel.getData().getUserPost() == 2) {
-                                UIUtils.showToast(LoginActivity.this, "用户权限低,无法登陆.");
-                            } else {
-                                BaseApplication.set("userId", loginModel.getData().getUserId());
-                                BaseApplication.set("userName", loginModel.getData().getUserName());
-                                BaseApplication.set("UserHeadpic", loginModel.getData().getUserHeadpic());
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.putExtra("userPost", loginModel.getData().getUserPost());
-                                startActivity(intent);
-                                finish();
+                    BaseApplication.set("userId", loginModel.getData().getUserId());
+                    BaseApplication.set("userName", loginModel.getData().getUserName());
+                    BaseApplication.set("UserHeadpic", loginModel.getData().getUserHeadpic());
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("userPost", loginModel.getData().getUserPost());
+                    startActivity(intent);
+                    finish();
+                    break;
 
-                            }
-                        } else {
-                            //登陆不成功
-                            UIUtils.showToast(LoginActivity.this, "用户名或密码错误,请重新输入.");
-                        }
-                    } else {
-                        UIUtils.showToast(LoginActivity.this, "用户名或密码错误,请重新输入.");
-                    }
+                case LOGMSG:
+                    String m = (String) msg.obj;
+                    UIUtils.showToast(LoginActivity.this,m);
 
                     break;
                 default:
@@ -99,8 +90,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 //        BaseApplication.addList(this);
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+            finish();
+            return;
+        }
         DaggerLoginComponent.builder().loginActivityModule(new LoginActivityModule(this)).build().in(this);
         initView();
+
     }
 
     private void initView() {
@@ -151,5 +147,12 @@ public class LoginActivity extends AppCompatActivity {
         msg.obj = loginModel;
         mHandler.sendMessage(msg);
 
+    }
+
+    public void logMsg(String s) {
+        Message msg = Message.obtain();
+        msg.what = LOGMSG;
+        msg.obj = s;
+        mHandler.sendMessage(msg);
     }
 }

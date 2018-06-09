@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.sx.cfsz.baseframework.base.BaseApplication;
 import com.sx.cfsz.baseframework.util.SecurityUtils;
 
 import java.io.File;
@@ -38,7 +39,7 @@ public class HttpUtils {
     public static final MediaType MEDIA_TYPE_MARKDOWN = MediaType.parse("text/x-markdown; charset=utf-8");
 
     private static final String HEADER_APP_KEY = "Sx_App_Key";
-    private static final String HEADER_ACCESS_TOKEN = "Sx_Access_Token";
+    private static final String HEADER_ACCESS_TOKEN = "Set-Cookie";
     private static final String HEADER_REFRESH_TOKEN = "Sx_Refresh_Token";
     private static final String HEADER_URL_SIGN = "Sx_Url_Sign";
 
@@ -58,7 +59,7 @@ public class HttpUtils {
 //        HttpUrl httpUrl = HttpUrl.parse(url);
 //        String sortResult = sortParams(httpUrl, null);
 //        String sign = sign(httpUrl, sortResult);
-        Request request = newRequest(url, context, "GET", null, false);
+        Request request = newRequest(url, context, "GET", null, true);
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -95,7 +96,7 @@ public class HttpUtils {
         }
 
         client
-                .newCall(newRequest(url, context, "POST", mbBuilder.build(), false))
+                .newCall(newRequest(url, context, "POST", mbBuilder.build(), true))
                 .enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -133,7 +134,7 @@ public class HttpUtils {
             }
         }
         client
-                .newCall(newRequest(url, context, "POST", bodyBuilder.build(), false))
+                .newCall(newRequest(url, context, "POST", bodyBuilder.build(), true))
                 .enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -171,7 +172,7 @@ public class HttpUtils {
             }
         }
         client
-                .newCall(newRequest(url, context, "DELETE", bodyBuilder.build(), false))
+                .newCall(newRequest(url, context, "DELETE", bodyBuilder.build(), true))
                 .enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -235,8 +236,8 @@ public class HttpUtils {
         //.header(HEADER_APP_KEY, ApiAuthUtils.getAppKey())
         //.header(HEADER_URL_SIGN, urlSign);
         if (hasAuth) {
-            builder.header(HEADER_ACCESS_TOKEN, ApiAuthUtils.getAccessToken())
-                    .header("Accept-Encoding", "identity")
+            builder.header("Tag","APP")
+                    .header("Set-Cookie", BaseApplication.get("Set-Cookie",""))
                     .header(HEADER_REFRESH_TOKEN, ApiAuthUtils.getRefreshToken());
         }
         return builder.build();

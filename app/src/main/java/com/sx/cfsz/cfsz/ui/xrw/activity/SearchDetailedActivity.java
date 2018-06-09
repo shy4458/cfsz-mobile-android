@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,6 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sx.cfsz.R;
 import com.sx.cfsz.baseframework.base.AppConfig;
 import com.sx.cfsz.baseframework.base.BaseApplication;
@@ -21,11 +28,13 @@ import com.sx.cfsz.cfsz.dagger.component.DaggerSearchActivityComponent;
 import com.sx.cfsz.cfsz.dagger.component.DaggerSearchDetaileComponent;
 import com.sx.cfsz.cfsz.dagger.module.SearchActivityModule;
 import com.sx.cfsz.cfsz.dagger.module.SearchDetailedModule;
+import com.sx.cfsz.cfsz.model.RwModel;
 import com.sx.cfsz.cfsz.model.RwSsModel;
 import com.sx.cfsz.cfsz.presenter.SearchActivityPresenter;
 import com.sx.cfsz.cfsz.presenter.SearchDetailePresenter;
 import com.sx.cfsz.cfsz.ui.adapter.SearchLvAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,10 +44,11 @@ import javax.inject.Inject;
 
 public class SearchDetailedActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-    private List<RwSsModel.DataBean.RecordsBean> recordsList;
+    public List<RwSsModel.DataBean.RecordsBean> list;
+    private List<RwSsModel.DataBean.RecordsBean> recordsList = new ArrayList<>();  //界面上的所有数据
     private TextView tvNumber;
     private ListView lvSsjg;
-
+    public int page = 1;
     @Inject
     SearchDetailePresenter presenter;
     private String caseId;
@@ -53,16 +63,26 @@ public class SearchDetailedActivity extends AppCompatActivity implements View.On
             switch (msg.what) {
                 case SSSD:
                     RwSsModel model = (RwSsModel) msg.obj;
-                    recordsList = model.getData().getRecords();
+                    totalCount = model.getData().getTotalCount();
+                    list = model.getData().getRecords();
+                    recordsList.addAll(list);
                     tvNumber.setText("共搜索到" + recordsList.size() + "条任务！");
                     lvSsjg.setAdapter(new SearchLvAdapter(SearchDetailedActivity.this, recordsList));
-
+                    if (recordsList.size() < totalCount){
+                        srlSs.setEnableLoadMore(true);
+                    }else {
+                        srlSs.setEnableLoadMore(false);
+                    }
+                    srlSs.finishRefresh();//结束刷新
+                    srlSs.finishLoadMore();//结束加载
                     break;
                 default:
                     break;
             }
         }
     };
+    private SmartRefreshLayout srlSs;
+    private int totalCount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,7 +91,7 @@ public class SearchDetailedActivity extends AppCompatActivity implements View.On
         DaggerSearchDetaileComponent.builder().searchDetailedModule(new SearchDetailedModule(this)).build().in(this);
         intView();
         initData();
-
+        initListener();
     }
 
     private void intView() {
@@ -79,6 +99,11 @@ public class SearchDetailedActivity extends AppCompatActivity implements View.On
         llBack.setOnClickListener(this);
         tvNumber = findViewById(R.id.tv_number);
         lvSsjg = findViewById(R.id.lv_ssjg);
+        srlSs = findViewById(R.id.srl_ss);
+        srlSs.setHeaderHeight(60);
+        srlSs.setRefreshHeader(new ClassicsHeader(SearchDetailedActivity.this));
+        srlSs.setRefreshFooter(new BallPulseFooter(SearchDetailedActivity.this).setAnimatingColor(getResources().getColor(R.color.colorTitle)));
+
         lvSsjg.setOnItemClickListener(this);
 
         Intent intent = getIntent();
@@ -87,11 +112,30 @@ public class SearchDetailedActivity extends AppCompatActivity implements View.On
         ssJzsj = intent.getStringExtra("ssJzsj");
 
     }
+    private void initListener() {
+        srlSs.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                list.clear();
+                recordsList.clear();
+                page = 1;
+                presenter.getData(BaseApplication.get("userId", ""), caseId, ssQssj, ssJzsj,page, AppConfig.ROWSNUMBER);
+            }
+        });
+        srlSs.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                page = page + 1;
+                presenter.getData(BaseApplication.get("userId", ""), caseId, ssQssj, ssJzsj,page, AppConfig.ROWSNUMBER);
+            }
+        });
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        presenter.getData(BaseApplication.get("userId", ""), caseId, ssQssj, ssJzsj);
+        recordsList.clear();
+        presenter.getData(BaseApplication.get("userId", ""), caseId, ssQssj, ssJzsj,page, AppConfig.ROWSNUMBER);
     }
 
     private void initData() {

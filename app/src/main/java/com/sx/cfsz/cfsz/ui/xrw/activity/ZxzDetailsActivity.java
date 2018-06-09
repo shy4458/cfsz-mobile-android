@@ -294,8 +294,7 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
                             //起始时间 和 截止时间 都为空时比较大小
                             Long sQs = Long.valueOf(qs.replaceAll("-", ""));
                             Long sJz = Long.valueOf(jz.replaceAll("-", ""));
-                            if (sQs < sJz) {
-                                UIUtils.showToast(ZxzDetailsActivity.this,etMsxx.getText().length() + "");
+                            if (sQs <= sJz) {
                                 feedDialog();
                                 presenter.feedZp(mPicList);
                             }else {
@@ -505,7 +504,7 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
                 cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
         final Date date = new Date();
         long time = date.getTime();
-        qsDialog.getDatePicker().setMinDate(time);
+        qsDialog.getDatePicker().setMinDate(time -1000);
         //手动设置按钮
         qsDialog.setButton(DialogInterface.BUTTON_POSITIVE, "完成", new DialogInterface.OnClickListener() {
             @Override
@@ -551,7 +550,7 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
 
         Date date = new Date();
         long time = date.getTime();
-        jzDialog.getDatePicker().setMinDate(time);
+        jzDialog.getDatePicker().setMinDate(time -1000);
         //手动设置按钮
         jzDialog.setButton(DialogInterface.BUTTON_POSITIVE, "完成", new DialogInterface.OnClickListener() {
             @Override

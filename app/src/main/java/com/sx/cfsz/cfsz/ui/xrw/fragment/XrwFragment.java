@@ -253,6 +253,8 @@ public class XrwFragment extends Fragment implements View.OnClickListener, ViewP
     public void xgRefresh(){
         presenter.getNumber();
         vp.setCurrentItem(0);
+        dzxFragment.dzxAllListRows.clear();
+        dzxFragment.presenter.getData(1,AppConfig.ROWSNUMBER,1);
     }
 
     //多选取消

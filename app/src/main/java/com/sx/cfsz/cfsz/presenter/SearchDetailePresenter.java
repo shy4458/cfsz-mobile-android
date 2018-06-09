@@ -20,8 +20,9 @@ public class SearchDetailePresenter  {
         this.activity = activity;
     }
 
-    public void getData(String userId, String caseId, String qssj, String jzsj) {
-        String url = AppConfig.IP + AppConfig.SJSEARCH + userId + "&case_id=" + caseId + AppConfig.KS_TIME + qssj + AppConfig.JS_TIME + jzsj;
+    public void getData(String userId, String caseId, String qssj, String jzsj,int page,int rows) {
+        String url = AppConfig.IP + AppConfig.SJSEARCH + userId + "&case_id=" + caseId + AppConfig.KS_TIME + qssj + AppConfig.JS_TIME + jzsj
+                +"&"+ AppConfig.PAGE + page + AppConfig.ROWS + rows;
         HttpUtils.getAsync(url, activity, new OnRequestResult() {
             @Override
             public void result(Exception e, Response response) {

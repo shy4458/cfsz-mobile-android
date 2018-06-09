@@ -10,7 +10,7 @@ import com.sx.cfsz.baseframework.base.BaseApplication;
 
 public final class ApiAuthUtils {
 
-    private static final String KEY_ACCESS_TOKEN = "Sx_access_token";
+    private static final String KEY_ACCESS_TOKEN = "Set-Cookie";
     private static final String KEY_REFRESH_TOKEN = "Sx_refresh_token";
     private static final String KEY_APP_KEY = "appKey";
     private static final String KEY_APP_SECRET = "appSecret";

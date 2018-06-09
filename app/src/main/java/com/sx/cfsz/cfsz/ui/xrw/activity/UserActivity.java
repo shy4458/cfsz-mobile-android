@@ -74,7 +74,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(UserActivity.this, LoginActivity.class);
                 startActivity(intent);
                 BaseApplication.clenList();
-
                 break;
 
             case R.id.ll_banben:
