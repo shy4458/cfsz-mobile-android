@@ -6,8 +6,11 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.sx.cfsz.baseframework.base.AppConfig;
 import com.sx.cfsz.baseframework.base.BaseApplication;
 import com.sx.cfsz.baseframework.util.SecurityUtils;
+import com.sx.cfsz.cfsz.model.CodeModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +22,8 @@ import java.util.Set;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
 import okhttp3.Dispatcher;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
@@ -43,7 +48,9 @@ public class HttpUtils {
     private static final String HEADER_REFRESH_TOKEN = "Sx_Refresh_Token";
     private static final String HEADER_URL_SIGN = "Sx_Url_Sign";
 
-    private static OkHttpClient client = new OkHttpClient();
+    private static OkHttpClient client = new OkHttpClient.Builder()
+            .cookieJar(new CookieJarUtil())
+            .build();
     private static String userAgent;
 
     static {
@@ -233,11 +240,8 @@ public class HttpUtils {
                 .method(method, body)
                 .tag(context)
                 .header("User-Agent", userAgent);
-        //.header(HEADER_APP_KEY, ApiAuthUtils.getAppKey())
-        //.header(HEADER_URL_SIGN, urlSign);
         if (hasAuth) {
-            builder.header("Tag","APP")
-                    .header("Set-Cookie", BaseApplication.get("Set-Cookie",""))
+            builder.header("Tag", "app")
                     .header(HEADER_REFRESH_TOKEN, ApiAuthUtils.getRefreshToken());
         }
         return builder.build();
@@ -283,39 +287,23 @@ public class HttpUtils {
         return SecurityUtils.hmacMD5(str + url.encodedPath() + appSecret, appSecret);
     }
 
-    //测试上传文件进度
-    public static void postProFilesAsync(@NonNull String url, @NonNull Context context, FileInfo[] files,
-                                         final OnRequestResult result, final ProgressRequestListener listener) {
-        MultipartBody.Builder mbBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        MultipartBody.Builder builder = new MultipartBody.Builder();
-        if (files != null && files.length > 0) {
-            FileInfo fileInfo;
-            for (int i = 0, len = files.length; i < len; i++) {
-                fileInfo = files[i];
-                File file = fileInfo.getFile();
-                String fileName = file.getName();
-                String suffix = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-                RequestBody body = RequestBody.create(MediaType.parse(fileInfo.getFileType().getValue() + "/" + suffix), file);
-                mbBuilder.addFormDataPart(fileInfo.getFormName(), fileName, body);
-            }
+
+    static class CookieJarUtil implements CookieJar {
+
+        private List<Cookie> cookie = null;
+
+        @Override
+        public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+            cookie = cookies;
         }
 
-        MultipartBody build = builder.build();
-        Request request = new Request.Builder().url(url).post(new ProgressRequestBody(build, listener)).build();
-
-        client
-                .newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
+        @Override
+        public List<Cookie> loadForRequest(HttpUrl url) {
+            if (cookie == null) {
+                return Collections.emptyList();
             }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-            }
-        });
+            return cookie;
+        }
     }
-
 
 }

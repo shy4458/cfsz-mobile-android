@@ -26,7 +26,6 @@
         </LinearLayout>
 
 
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -44,7 +43,16 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="50dp" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="以案件的计划结束时间为维度搜索"
+            android:gravity="center"
+            />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/llSearchQssj"
@@ -58,7 +66,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="起始时间"
+            android:text="开始时间"
             android:textSize="16sp" />
 
         <TextView
@@ -66,8 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            />
+            android:gravity="center" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,7 +93,7 @@
     <TextView
         android:id="@+id/tv_2"
         android:layout_width="match_parent"
-        android:layout_height="0.2dp"
+        android:layout_height="0.1dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:background="@color/colorBlack" />
@@ -107,7 +114,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="截至时间"
+            android:text="结束时间"
             android:textSize="16sp" />
 
         <TextView
@@ -115,6 +122,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:clickable="false"
             android:gravity="center" />
 
         <LinearLayout
@@ -131,17 +139,18 @@
                 android:background="@drawable/search_right_back" />
         </LinearLayout>
     </LinearLayout>
+
     <TextView
         android:id="@+id/tv_4"
         android:layout_width="match_parent"
-        android:layout_height="0.2dp"
+        android:layout_height="0.1dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:background="@color/colorBlack" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"/>
+        android:layout_height="30dp" />
 
     <LinearLayout
         android:id="@+id/ll_5"
@@ -160,8 +169,8 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_weight="1.5"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_weight="1.5" />
 
         <EditText
             android:id="@+id/etSearchName"
@@ -172,14 +181,14 @@
             android:hint="请输入案件号" />
 
     </LinearLayout>
+
     <TextView
         android:id="@+id/tv_6"
         android:layout_width="match_parent"
-        android:layout_height="0.2dp"
+        android:layout_height="0.1dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:background="@color/colorBlack" />
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -195,12 +204,13 @@
 
         <Button
             android:id="@+id/bqc"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/shape_corner_rwxq_c"
             android:layout_weight="1"
-            android:textColor="@color/colorWhite"
-            android:text="重置" />
+            android:background="@drawable/user_shape_corner"
+            android:text="重置"
+            android:textColor="@drawable/login_but_textcolor" />
 
         <TextView
             android:layout_width="match_parent"
@@ -209,13 +219,15 @@
 
         <Button
             android:id="@+id/bSs"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@drawable/shape_corner_rwxq_y"
+            android:background="@drawable/login_shape_corner"
             android:gravity="center"
-            android:text="搜索" />
+            android:text="搜索"
+            android:textColor="@drawable/login_but_textcolor" />
 
         <TextView
             android:layout_width="match_parent"
@@ -223,6 +235,4 @@
             android:layout_weight="1" />
 
     </LinearLayout>
-
-
 </LinearLayout>

@@ -3,6 +3,7 @@ package com.sx.cfsz.cfsz.ui;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -89,18 +90,16 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-//        BaseApplication.addList(this);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
             return;
         }
         DaggerLoginComponent.builder().loginActivityModule(new LoginActivityModule(this)).build().in(this);
         initView();
-
     }
 
     private void initView() {
-
         bLogin = findViewById(R.id.bLogin);
         etName = findViewById(R.id.et_name);
         etPwd = findViewById(R.id.et_pwd);
@@ -109,8 +108,6 @@ public class LoginActivity extends AppCompatActivity {
 //        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(15,true);//设置字体大小 true表示单位是sp
 //        name.setSpan(ass, 0, name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 //        etName.setHint(new SpannedString(name));
-//
-//
 //        SpannableString pwd = new SpannableString("密码");//定义hint的值
 //        pwd.setSpan(ass, 0, pwd.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 //        etPwd.setHint(new SpannedString(pwd));

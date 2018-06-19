@@ -33,7 +33,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     UserActivityPresenter presenter;
     private static final int BB = 55;
 
-
     private CircleImageView civ;
     private TextView tvName;
     private TextView tvBbh;

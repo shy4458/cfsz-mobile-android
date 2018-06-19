@@ -24,11 +24,14 @@ public class AppConfig {
 
     public static final int ROWSNUMBER = 20;
 
+    //法院接口
+//    public static final String IP = "http://114.255.39.85:80/";
+
     //调式接口ip
-//    public static final String IP = "http://192.168.120.115:9000/";
+    public static final String IP = "http://192.168.120.115:9000/";
 
     //测试接口
-    public static final String IP = "http://10.100.105.5:7020/";
+//    public static final String IP = "http://10.100.105.5:7020/";
 
     //领导接口
     //http://cyfytest.beikongyun.com/

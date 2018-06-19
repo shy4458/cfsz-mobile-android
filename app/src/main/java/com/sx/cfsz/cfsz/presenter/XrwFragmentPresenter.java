@@ -61,7 +61,6 @@ public class XrwFragmentPresenter {
 
     public void getNumber() {
         String url = AppConfig.IP + AppConfig.NUMBER + BaseApplication.get("userId", "");
-
         HttpUtils.getAsync(url, fragment.getActivity(), new OnRequestResult() {
             @Override
             public void result(Exception e, Response response) {

@@ -34,11 +34,11 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:background="@drawable/ic_banben" />
 
         <TextView
@@ -51,53 +51,53 @@
             android:id="@+id/tv_bbh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical|right"
             android:layout_marginRight="20dp"
-            android:text="1.0.0"
-            />
+            android:gravity="center_vertical|right"
+            android:text="1.0.0" />
 
         <!--<ImageView-->
-            <!--android:layout_marginLeft="100dp"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@drawable/search_right_back"-->
-            <!--android:layout_gravity="center"/>-->
+        <!--android:layout_marginLeft="100dp"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@drawable/search_right_back"-->
+        <!--android:layout_gravity="center"/>-->
 
     </LinearLayout>
 
     <!--<LinearLayout-->
-        <!--android:id="@+id/ll_gywm"-->
-        <!--android:layout_marginTop="0.5dp"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:background="@color/colorWhite"-->
-        <!--android:orientation="horizontal">-->
+    <!--android:id="@+id/ll_gywm"-->
+    <!--android:layout_marginTop="0.5dp"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:background="@color/colorWhite"-->
+    <!--android:orientation="horizontal">-->
 
-        <!--<ImageView-->
-            <!--android:layout_marginLeft="15dp"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:background="@drawable/ic_about" />-->
+    <!--<ImageView-->
+    <!--android:layout_marginLeft="15dp"-->
+    <!--android:layout_marginRight="15dp"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:background="@drawable/ic_about" />-->
 
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:text="关于我们" />-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:text="关于我们" />-->
     <!--</LinearLayout>-->
-
 
     <Button
         android:id="@+id/bTc"
-        android:layout_marginTop="150dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="150dp"
+        android:background="@drawable/user_shape_corner"
         android:text="退出登录"
-        android:textColor="@color/colorTitle"
-        android:layout_gravity="center"/>
+        android:textColor="@drawable/login_but_textcolor" />
 
 </LinearLayout>

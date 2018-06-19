@@ -367,12 +367,12 @@ public class TjfxFragment extends Fragment implements OnChartValueSelectedListen
 
         for (int c : ColorTemplate.VORDIPLOM_COLORS)
             colors.add(c);
-        for (int c : ColorTemplate.JOYFUL_COLORS)
-            colors.add(c);
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
-        for (int c : ColorTemplate.LIBERTY_COLORS)
-            colors.add(c);
+//        for (int c : ColorTemplate.JOYFUL_COLORS)
+//            colors.add(c);
+//        for (int c : ColorTemplate.COLORFUL_COLORS)
+//            colors.add(c);
+//        for (int c : ColorTemplate.LIBERTY_COLORS)
+//            colors.add(c);
 
         colors.add(ColorTemplate.getHoloBlue());
         dataSet.setColors(colors);

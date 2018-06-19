@@ -109,9 +109,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private void initLisenter() {
         llBack.setOnClickListener(this);
         llQssj.setOnClickListener(this);
-        tvQssj.setOnClickListener(this);
         llJzsj.setOnClickListener(this);
-        tvJzsj.setOnClickListener(this);
         bqc.setOnClickListener(this);
         bSs.setOnClickListener(this);
         calendar = Calendar.getInstance();
@@ -175,7 +173,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 ssQssj = snQssj(tvQssj.getText() + "");
                 ssjzsj = snJzsj(tvJzsj.getText() + "");
 
-                presenter.search(userId, caseId,qssj,jzsj);
+                presenter.search(userId, caseId,ssQssj,ssjzsj);
 
 //                if (state == 0) {
 //                    presenter.sjSearch(qssj + " 00:00:00", jzsj + " 00:00:00");
@@ -195,7 +193,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 tvJzsj.setText("");
 
                 break;
-
         }
     }
 
@@ -345,7 +342,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         if ("".equals(sj)) {
             return "";
         }
-        return tvJzsj.getText() + " 00:00:00";
+        return tvJzsj.getText() + " 24:00:00";
     }
 
     @Override

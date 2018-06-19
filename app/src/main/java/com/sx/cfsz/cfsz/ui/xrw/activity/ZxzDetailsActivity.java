@@ -24,10 +24,12 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -38,6 +40,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -172,7 +175,7 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
     private TextView tvCzlx;
     private TextView tvMsg;
     private Dialog feedDialog;
-
+    private ScrollView scrollView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -208,22 +211,18 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         if ("1".equals(red_sign)) {
             presenter.remoRed(task_id, red_sign);
         }
-
         initSpi();
     }
-
 
     private void initView() {
         BaseApplication.addList(this);
         llBack = findViewById(R.id.llFeedbackBack);
         tvBack = findViewById(R.id.tvFeedback);
         etMsxx = findViewById(R.id.etMsxx);
-        SpannableString ss = new SpannableString("请在这里输入反馈信息...");//定义hint的值
+        SpannableString ss = new SpannableString("请在这里输入反馈信息(最多200字)...");//定义hint的值
         AbsoluteSizeSpan ass = new AbsoluteSizeSpan(15, true);//设置字体大小 true表示单位是sp
         ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         etMsxx.setHint(new SpannedString(ss));
-
-
         gridView = findViewById(R.id.gridView);
         lvMp4 = findViewById(R.id.lvMp4);
         ivAddMp4 = findViewById(R.id.ivAddMp4);
@@ -236,7 +235,7 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         tvRwnr = findViewById(R.id.tv_zxz_rwnr);
         llCzlx = findViewById(R.id.ll_czlx);
         ivDaohang = findViewById(R.id.iv_zxz_daohang);
-
+        scrollView = findViewById(R.id.scrollView);
 //        czlxSpinner = findViewById(R.id.spi);
         tvDcQssj = findViewById(R.id.tv_dcQssj);
         tvDcJzsj = findViewById(R.id.tv_dcJzsj);
@@ -310,7 +309,6 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
                         feedDialog();
                         presenter.feedZp(mPicList);
                     }
-
                 }
                 break;
 
@@ -496,7 +494,6 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-
     //起始时间dialog
     private void showDcDialogqs() {
         Calendar cal = Calendar.getInstance();
@@ -527,7 +524,6 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
                 } else {
                     qsDay = day + "";
                 }
-
 
                 tvDcQssj.setText(year + "-" + qsMonth + "-" + qsDay);
             }
@@ -593,7 +589,6 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
     int yourChoice;
 
     private void ShowSingleDialog(int item) {
-
         final String[] items = new String[listType.size()];
         for (int i = 0; i < listType.size(); i++) {
             items[i] = listType.get(i);
@@ -697,4 +692,5 @@ public class ZxzDetailsActivity extends AppCompatActivity implements View.OnClic
         msg.obj = str;
         mHandler.sendMessage(msg);
     }
+
 }

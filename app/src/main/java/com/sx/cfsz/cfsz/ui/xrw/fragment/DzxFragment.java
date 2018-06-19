@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,7 @@ import static android.app.Activity.RESULT_OK;
 /***       Author  shy
  *         Time   2018/4/19 0019    10:03      */
 
-public class DzxFragment extends Fragment{
+public class DzxFragment extends Fragment {
 
     @Inject
     DzxFragmentPresenter presenter;
@@ -57,7 +58,7 @@ public class DzxFragment extends Fragment{
     private DzxLvAdapter dzxLvAdapter;
     private MainActivity mainActivity;
     public int page = 1;    //页码
-    private int state =0;   //首次加载标识
+    private int state = 0;   //首次加载标识
     private int totalCount; //数据总数
 
     @SuppressLint("HandlerLeak")
@@ -73,13 +74,13 @@ public class DzxFragment extends Fragment{
                     dzxAllListRows.addAll(dzxListRows);
                     dzxLvAdapter = new DzxLvAdapter(DzxFragment.this.getActivity(), dzxAllListRows);
                     lvDzx.setAdapter(dzxLvAdapter);
-                    if (page != 1){
-                        lvDzx.setSelection(page*20-22);
+                    if (page != 1) {
+                        lvDzx.setSelection(page * 20 - 22);
                     }
                     presenter.dialogDismis();
-                    if (dzxAllListRows.size() < totalCount){
+                    if (dzxAllListRows.size() < totalCount) {
                         dzxRefresh.setEnableLoadMore(true);
-                    }else {
+                    } else {
                         dzxRefresh.setEnableLoadMore(false);
                     }
                     dzxRefresh.finishRefresh();//结束刷新
@@ -94,7 +95,7 @@ public class DzxFragment extends Fragment{
                     if (dzxAllListRows != null) {
                         dzxAllListRows.clear();
                     }
-                    presenter.getData(1, AppConfig.ROWSNUMBER,1);
+                    presenter.getData(1, AppConfig.ROWSNUMBER, 1);
                 default:
                     break;
             }
@@ -117,7 +118,7 @@ public class DzxFragment extends Fragment{
          * 通过setUserV..H..方法 切换显示ViewPager中Fragment时加载数据
          * 但首次不调用 因此使用本标识 state
          */
-        if (state == 0){
+        if (state == 0) {
             initData(1);
             state = 1;
         }
@@ -135,24 +136,26 @@ public class DzxFragment extends Fragment{
     }
 
     public void initData(int s) {
-        presenter.getData(1, AppConfig.ROWSNUMBER,s);
+        presenter.getData(1, AppConfig.ROWSNUMBER, s);
     }
 
     private void initListener() {
         dzxRefresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+//                MainActivity activity = (MainActivity) getActivity();
+//                activity.refreh();
                 dzxListRows.clear();
                 dzxAllListRows.clear();
                 page = 1;
-                presenter.getData(1, AppConfig.ROWSNUMBER,0);
+                presenter.getData(1, AppConfig.ROWSNUMBER, 0);
             }
         });
         dzxRefresh.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 page = page + 1;
-                presenter.getData(page, AppConfig.ROWSNUMBER,0);
+                presenter.getData(page, AppConfig.ROWSNUMBER, 0);
             }
         });
         //列表长按
@@ -185,7 +188,7 @@ public class DzxFragment extends Fragment{
                 intent.putExtra("Task_lat", dzxAllListRows.get(position).getTask_lat());
                 intent.putExtra("Task_lng", dzxAllListRows.get(position).getTask_lng());
                 intent.putExtra("Red_sign", dzxAllListRows.get(position).getRed_sign());
-                startActivityForResult(intent,20);
+                startActivityForResult(intent, 20);
             }
         });
     }
@@ -196,7 +199,7 @@ public class DzxFragment extends Fragment{
             if (dzxAllListRows != null) {
                 dzxAllListRows.clear();
             }
-            presenter.getData(1, AppConfig.ROWSNUMBER,1);
+            presenter.getData(1, AppConfig.ROWSNUMBER, 1);
         }
         super.setUserVisibleHint(isVisibleToUser);
     }
@@ -209,11 +212,11 @@ public class DzxFragment extends Fragment{
         if (requestCode == 20 && resultCode == RESULT_OK) {
             Bundle bundle = data.getExtras();
             String state = bundle.getString("state");
-            if ("20".equals(state)){
+            if ("20".equals(state)) {
                 if (dzxAllListRows != null) {
                     dzxAllListRows.clear();
                 }
-                presenter.getData(1, AppConfig.ROWSNUMBER,1);
+                presenter.getData(1, AppConfig.ROWSNUMBER, 1);
             }
         }
     }
@@ -235,15 +238,23 @@ public class DzxFragment extends Fragment{
     public void setAllYse() {
         String allTastId = "";
         HashMap<Integer, String> map = dzxLvAdapter.map;
-        for (String value : map.values()) {
-            allTastId = value + "," + allTastId;
+        if (!map.isEmpty()) {
+            for (String value : map.values()) {
+                allTastId = value + "," + allTastId;
+            }
         }
         String allRed = "";
         Map<Integer, String> mapRed = dzxLvAdapter.mapRed;
-        for (String value : mapRed.values()) {
-            allRed = value + "," + allRed;
+        if (!mapRed.isEmpty()) {
+            for (String value : mapRed.values()) {
+                allRed = value + "," + allRed;
+            }
         }
-        presenter.submitAll(allTastId.substring(0, allTastId.length() - 1), allRed.substring(0, allRed.length() - 1));
+        if (!map.isEmpty() & !mapRed.isEmpty()) {
+            presenter.submitAll(allTastId.substring(0, allTastId.length() - 1), allRed.substring(0, allRed.length() - 1));
+        }else {
+            UIUtils.showToast(getActivity(),"未勾选要执行任务，请重新选择");
+        }
     }
 
     //刷新开关

@@ -6,6 +6,7 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.content.SharedPreferencesCompat;
 import android.util.Log;
@@ -76,6 +77,7 @@ public class BaseApplication extends Application {
 
 
     public static void addList(Activity activity) {
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         list.add(activity);
     }
 

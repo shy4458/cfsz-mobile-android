@@ -115,7 +115,6 @@ public class PlusImageActivity extends AppCompatActivity implements ViewPager.On
         normalDialog.show();
     }
 
-
     //设置当前位置
     private void setPosition() {
         positionTv.setText(mPosition + 1 + "/" + imgList.size());

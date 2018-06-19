@@ -28,7 +28,6 @@ public class LoginPresenter {
     }
 
     public void login(String name, String pwd) {
-
         String url = AppConfig.IP + AppConfig.LOGIN + AppConfig.NAME + name + AppConfig.PWD + pwd;
         HttpUtils.getAsync(url, activity, new OnRequestResult() {
             @Override
@@ -45,17 +44,16 @@ public class LoginPresenter {
                                     if (loginModel.getData().getUserPost() == 2) {
                                         activity.logMsg(loginModel.getMessage());
                                     } else {
-                                        String cookie = response.header("Set-Cookie");
-                                        String[] split = cookie.split(";");
-                                        for (int i = 0; i < split.length; i++) {
-                                            String[] split1 = split[i].split("=");
-                                            if ("JSESSIONID".equals(split1[0])) {
-                                                BaseApplication.set("Set-Cookie", split1[1]);
-                                                Log.e("Cookie", BaseApplication.get("Set-Cookie", ""));
-                                                break;
-                                            }
-                                        }
-                                        activity.success(loginModel);
+//                                        String cookie = response.header("Set-Cookie");
+//                                        String[] split = cookie.split(";");
+//                                        for (int i = 0; i < split.length; i++) {
+//                                            String[] split1 = split[i].split("=");
+//                                            if ("JSESSIONID".equals(split1[0])) {
+//                                                BaseApplication.set("Set-Cookie", split1[1]);
+                                                activity.success(loginModel);
+//                                                break;
+//                                            }
+//                                        }
                                     }
 
                                 } else {

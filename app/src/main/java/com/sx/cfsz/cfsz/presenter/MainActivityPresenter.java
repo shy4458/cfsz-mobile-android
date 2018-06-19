@@ -2,6 +2,7 @@ package com.sx.cfsz.cfsz.presenter;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -46,9 +47,13 @@ public class MainActivityPresenter {
                             String str = response.body().string();
                             Gson gson = new Gson();
                             UserModel userModel = gson.fromJson(str, UserModel.class);
-                            int data = userModel.getData();
-                            if (data > BuildConfig.VERSION_CODE) {
-                                activity.sucessUp();
+                            if (userModel.getCode() != -3) {
+                                int data = userModel.getData();
+                                if (data > BuildConfig.VERSION_CODE) {
+                                    activity.sucessUp();
+                                }
+                            } else {
+                                activity.Obsolete();
                             }
 
                         } catch (IOException e1) {
@@ -92,7 +97,6 @@ public class MainActivityPresenter {
                         }
                         activity.downSuccess(file);
                     } catch (Exception e0) {
-                        Log.e("//////", e0.getMessage());
                         activity.downFial("下载失败");
                     } finally {
                         try {

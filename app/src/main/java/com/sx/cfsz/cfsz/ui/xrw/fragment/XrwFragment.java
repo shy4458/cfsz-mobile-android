@@ -212,7 +212,6 @@ public class XrwFragment extends Fragment implements View.OnClickListener, ViewP
 
     }
 
-
     public void successNumber(RwNumberModel rwNumberModel) {
         Message msg = Message.obtain();
         msg.what = MSG;

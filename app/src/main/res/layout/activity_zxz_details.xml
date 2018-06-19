@@ -45,6 +45,7 @@
     </FrameLayout>
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -192,7 +193,6 @@
 
             </LinearLayout>
 
-
             <TextView
                 android:id="@+id/tv_zxz_rwnr"
                 android:layout_width="match_parent"
@@ -286,7 +286,7 @@
                         android:layout_marginLeft="20dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="查封开始时间" />
+                        android:text="控制开始时间" />
 
                     <TextView
                         android:id="@+id/tv_dcQssj"
@@ -320,7 +320,7 @@
                         android:layout_marginLeft="20dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="查封结束时间" />
+                        android:text="控制结束时间" />
 
                     <TextView
                         android:id="@+id/tv_dcJzsj"
@@ -390,6 +390,8 @@
                         android:id="@+id/etMsxx"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
+                        android:maxLength="200"
+                        android:textSize="14sp"
                         android:background="@color/colorWhite" />
 
                 </LinearLayout>

@@ -78,7 +78,7 @@
             android:layout_marginTop="70dp"
             android:background="@drawable/login_shape_corner"
             android:text="登录"
-            android:textColor="@color/colorWhite"
+            android:textColor="@drawable/login_but_textcolor"
             android:textSize="18sp" />
 
     </LinearLayout>

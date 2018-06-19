@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int PROSEZI = 125;
     private static final int DOWSUCCESS = 126;
     private static final int DOWFIAL = 127;
+    private static final int OBSOLETE = 321;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -120,7 +121,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case DOWFIAL:
                     dowDialog.dismiss();
                     UIUtils.showToast(MainActivity.this, "网络连接异常");
+                    break;
 
+                case OBSOLETE:
+                    UIUtils.showToast(MainActivity.this, "登陆超时,请重新登录");
+                    BaseApplication.removeUserId();
+                    XGPushManager.unregisterPush(BaseApplication.context());
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    BaseApplication.clenList();
                     break;
                 default:
                     break;
@@ -492,7 +501,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.addCategory("android.intent.category.DEFAULT");
         intent.setDataAndType(Uri.fromFile(file),
                 "application/vnd.android.package-archive");
-        startActivity(intent);
+        startActivity(Intent.createChooser(intent,""));
     }
 
     //发起更新
@@ -536,6 +545,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    public void refreh(){
+        xrwFragment.onResume();
+    }
+
     //被踢下线
     public void xx() {
         BaseApplication.removeUserId();
@@ -553,5 +566,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         builder.show();
+    }
+
+    public void Obsolete() {
+        Message message = Message.obtain();
+        message.what = OBSOLETE;
+        mHandler.sendMessage(message);
     }
 }
